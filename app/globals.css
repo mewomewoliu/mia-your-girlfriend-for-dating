@@ -1,0 +1,115 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Background */
+  --bg: #1a0e08;
+
+  /* Cream cards */
+  --card-bg: #F5EFE8;
+  --card-border: rgba(200,149,108,0.22);
+  --card-shadow: 0 6px 48px rgba(0,0,0,0.58), 0 1px 0 rgba(200,149,108,0.10);
+
+  /* Gold accent */
+  --gold: #C8956C;
+  --gold-soft: rgba(200,149,108,0.28);
+  --gold-focus: rgba(200,149,108,0.68);
+
+  /* Text on cream cards */
+  --text-card: #1A1714;
+  --text-card-secondary: rgba(26,23,20,0.62);
+  --text-card-muted: rgba(26,23,20,0.38);
+
+  /* Text on dark backgrounds */
+  --text: rgba(245,239,232,0.88);
+  --text-muted: rgba(245,239,232,0.42);
+
+  /* Dark button */
+  --btn: #1A1714;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  background: transparent;
+  color: var(--text);
+  overscroll-behavior: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Form elements ──────────────────────── */
+
+input, textarea {
+  background: rgba(255,255,255,0.75);
+  border: 1px solid rgba(200,149,108,0.35);
+  color: var(--text-card);
+  outline: none;
+  transition: border-color 200ms ease;
+}
+
+input:focus, textarea:focus {
+  border-color: var(--gold-focus);
+}
+
+input::placeholder, textarea::placeholder {
+  color: rgba(26,23,20,0.32);
+}
+
+input[type="date"], input[type="time"] {
+  color-scheme: light;
+}
+
+/* ── Animations ──────────────────────────────── */
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes bubble-in {
+  from { opacity: 0; transform: translateY(5px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes typing {
+  0%, 80%, 100% { opacity: 0.25; transform: scale(0.82); }
+  40%            { opacity: 1;    transform: scale(1); }
+}
+
+@keyframes pulse-ring {
+  0%, 100% { opacity: 0.35; transform: scale(1); }
+  50%       { opacity: 0.65; transform: scale(1.04); }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* ── Utility classes ─────────────────────────── */
+
+.animate-fade-in   { animation: fade-in 400ms ease both; }
+.animate-bubble-in { animation: bubble-in 250ms ease both; }
+
+/* ── Scrollbar ───────────────────────────────── */
+
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(200,149,108,0.22);
+  border-radius: 2px;
+}
+
+/* ── Selection ───────────────────────────────── */
+
+::selection {
+  background: rgba(200,149,108,0.22);
+  color: var(--text-card);
+}
