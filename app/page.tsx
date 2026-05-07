@@ -65,7 +65,9 @@ export default function OnboardingPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ birthDate: birth.date, birthTime: birth.time, birthCity: birth.city, intentions, language: lang }),
       })
+      if (!res.ok) throw new Error(`chart api ${res.status}`)
       const chart = await res.json()
+      if (!chart.insights) throw new Error('invalid chart response')
       const newProfile: UserProfile = {
         name: name || undefined,
         birth,
