@@ -83,6 +83,17 @@ input[type="date"], input[type="time"] {
   40%            { opacity: 1;    transform: scale(1); }
 }
 
+@keyframes orb-breathe {
+  0%, 100% { box-shadow: 0 0 20px rgba(200,149,108,0.20), 0 0 40px rgba(200,149,108,0.08); transform: scale(1); }
+  50%       { box-shadow: 0 0 28px rgba(200,149,108,0.35), 0 0 56px rgba(200,149,108,0.12); transform: scale(1.03); }
+}
+
+@keyframes orb-drift {
+  0%, 100% { transform: translate(0,0) scale(1); }
+  33%       { transform: translate(18px,-22px) scale(1.06); }
+  66%       { transform: translate(-12px,12px) scale(0.96); }
+}
+
 @keyframes pulse-ring {
   0%, 100% { opacity: 0.35; transform: scale(1); }
   50%       { opacity: 0.65; transform: scale(1.04); }

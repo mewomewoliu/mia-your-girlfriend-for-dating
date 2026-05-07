@@ -277,9 +277,12 @@ export default function CompatibilityPage() {
                 <p style={goldLabel}>{t.questionsTitle}</p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                   {report.sections.questionsToExplore.map((q, i) => (
-                    <p key={i} style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 15, color: 'var(--text-card-secondary)', lineHeight: 1.5, paddingLeft: 12, borderLeft: '2px solid rgba(200,149,108,0.38)' }}>
-                      {q}
-                    </p>
+                    <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
+                      <span style={{ color: 'var(--gold)', fontSize: 11, marginTop: 4, flexShrink: 0 }}>✦</span>
+                      <p style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 15, color: 'var(--text-card-secondary)', lineHeight: 1.5 }}>
+                        {q}
+                      </p>
+                    </div>
                   ))}
                 </div>
               </div>

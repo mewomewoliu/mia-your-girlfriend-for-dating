@@ -480,7 +480,19 @@ export default function OnboardingPage() {
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 22 }}>
                 {profile.chart.insights.map((insight, i) => (
-                  <div key={i} style={{ borderLeft: '2px solid rgba(200,149,108,0.40)', paddingLeft: 12 }}>
+                  <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+                    <span style={{
+                      fontFamily: 'var(--font-body)',
+                      fontSize: 9.5,
+                      fontWeight: 500,
+                      color: 'var(--gold)',
+                      letterSpacing: '0.04em',
+                      marginTop: 2,
+                      flexShrink: 0,
+                      minWidth: 16,
+                    }}>
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
                     <p style={{ ...body, fontSize: 13 }}>{insight}</p>
                   </div>
                 ))}

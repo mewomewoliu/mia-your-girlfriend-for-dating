@@ -13,9 +13,9 @@ export function MiaOrb({ size = 42, className = '' }: MiaOrbProps) {
         width: size,
         height: size,
         borderRadius: '50%',
-        background: `radial-gradient(circle at 38% 38%, rgba(138,171,143,0.55) 0%, rgba(42,92,82,0.72) 50%, rgba(8,12,9,0.85) 100%)`,
-        border: '1px solid rgba(107,158,126,0.3)',
-        boxShadow: '0 0 20px rgba(107,158,126,0.2), 0 0 40px rgba(107,158,126,0.08)',
+        background: `radial-gradient(circle at 38% 38%, rgba(220,175,130,0.55) 0%, rgba(100,60,25,0.72) 50%, rgba(26,14,8,0.88) 100%)`,
+        border: '1px solid rgba(200,149,108,0.30)',
+        boxShadow: '0 0 20px rgba(200,149,108,0.20), 0 0 40px rgba(200,149,108,0.08)',
         animation: 'orb-breathe 4s ease-in-out infinite',
       }}
     >
