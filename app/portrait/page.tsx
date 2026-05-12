@@ -31,9 +31,9 @@ export default function PortraitPage() {
   const card: React.CSSProperties = {
     background: 'var(--card-bg)',
     border: '0.5px solid var(--card-border)',
-    borderRadius: 20,
+    borderRadius: 16,
     boxShadow: 'var(--card-shadow)',
-    padding: '18px',
+    padding: 'var(--card-pad-sm)',
   }
 
   const goldLabel: React.CSSProperties = {
@@ -57,9 +57,9 @@ export default function PortraitPage() {
           background: 'rgba(16,13,10,0.94)',
           backdropFilter: 'blur(20px)',
           borderBottom: '1px solid rgba(200,149,108,0.18)',
-          padding: '16px 20px',
+          padding: '12px 16px',
         }}>
-          <p style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 20, color: 'rgba(245,239,232,0.92)' }}>
+          <p style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 18, color: 'rgba(245,239,232,0.92)' }}>
             {t.portraitTitle}
           </p>
           <p style={{ fontFamily: 'var(--font-body)', fontSize: 11, color: 'rgba(245,239,232,0.38)', marginTop: 2 }}>
@@ -67,7 +67,7 @@ export default function PortraitPage() {
           </p>
         </div>
 
-        <div className="flex-1 overflow-y-auto px-5 py-6 max-w-lg mx-auto w-full">
+        <div className="flex-1 overflow-y-auto px-4 py-5 max-w-lg mx-auto w-full">
           <div className="flex flex-col gap-5 animate-fade-in">
 
             {/* Chart summary */}

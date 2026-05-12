@@ -13,26 +13,28 @@ export function QuickReply({ options, onSelect }: QuickReplyProps) {
           key={opt}
           onClick={() => onSelect(opt)}
           style={{
-            background: 'rgba(245,239,232,0.08)',
-            border: '1px solid rgba(200,149,108,0.35)',
-            borderRadius: 22,
-            padding: '7px 14px',
-            color: 'rgba(245,239,232,0.75)',
+            background: 'transparent',
+            border: '1px solid rgba(0,0,0,0.14)',
+            borderRadius: 20,
+            padding: '6px 13px',
+            color: 'rgba(16,16,16,0.60)',
             fontFamily: 'var(--font-body)',
-            fontSize: 13,
+            fontSize: 12.5,
             fontWeight: 400,
             cursor: 'pointer',
-            transition: 'all 160ms ease',
+            transition: 'all 140ms ease',
           }}
           onMouseEnter={(e) => {
             const el = e.currentTarget as HTMLButtonElement
-            el.style.background = 'rgba(245,239,232,0.14)'
-            el.style.borderColor = 'rgba(200,149,108,0.60)'
+            el.style.background = 'rgba(0,0,0,0.04)'
+            el.style.borderColor = 'rgba(0,0,0,0.28)'
+            el.style.color = 'rgba(16,16,16,0.80)'
           }}
           onMouseLeave={(e) => {
             const el = e.currentTarget as HTMLButtonElement
-            el.style.background = 'rgba(245,239,232,0.08)'
-            el.style.borderColor = 'rgba(200,149,108,0.35)'
+            el.style.background = 'transparent'
+            el.style.borderColor = 'rgba(0,0,0,0.14)'
+            el.style.color = 'rgba(16,16,16,0.60)'
           }}
         >
           {opt}

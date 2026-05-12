@@ -18,17 +18,15 @@ export function ChatBubble({ message }: ChatBubbleProps) {
       <div
         style={{
           maxWidth: '78%',
-          background: isUser ? 'rgba(26,23,20,0.85)' : 'var(--card-bg)',
-          border: isUser
-            ? '1px solid rgba(200,149,108,0.28)'
-            : '0.5px solid rgba(200,149,108,0.20)',
-          borderRadius: isUser ? '20px 20px 4px 20px' : '20px 20px 20px 4px',
+          background: isUser ? '#101010' : '#F3EFE9',
+          border: 'none',
+          borderRadius: isUser ? '18px 18px 4px 18px' : '18px 18px 18px 4px',
           padding: '10px 14px',
-          color: isUser ? 'rgba(245,239,232,0.88)' : 'var(--text-card)',
+          color: isUser ? 'rgba(255,255,255,0.90)' : 'rgba(16,16,16,0.78)',
           fontFamily: 'var(--font-body)',
           fontSize: 14.5,
           fontWeight: isUser ? 400 : 300,
-          lineHeight: 1.6,
+          lineHeight: 1.62,
           whiteSpace: 'pre-wrap',
           wordBreak: 'break-word',
         }}
@@ -45,7 +43,7 @@ export function ChatBubble({ message }: ChatBubbleProps) {
       <span
         style={{
           fontSize: 9.5,
-          color: 'rgba(245,239,232,0.25)',
+          color: 'rgba(16,16,16,0.25)',
           fontFamily: 'var(--font-body)',
           paddingLeft: isUser ? 0 : 2,
           paddingRight: isUser ? 2 : 0,

@@ -55,7 +55,7 @@ export default function CompatibilityPage() {
   const card: React.CSSProperties = {
     background: 'var(--card-bg)',
     border: '0.5px solid var(--card-border)',
-    borderRadius: 20,
+    borderRadius: 16,
     boxShadow: 'var(--card-shadow)',
   }
 
@@ -109,9 +109,9 @@ export default function CompatibilityPage() {
           background: 'rgba(16,13,10,0.94)',
           backdropFilter: 'blur(20px)',
           borderBottom: '1px solid rgba(200,149,108,0.18)',
-          padding: '16px 20px',
+          padding: '12px 16px',
         }}>
-          <p style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 20, color: 'rgba(245,239,232,0.92)' }}>
+          <p style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 18, color: 'rgba(245,239,232,0.92)' }}>
             {t.compatTitle}
           </p>
           <p style={{ fontFamily: 'var(--font-body)', fontSize: 11, color: 'rgba(245,239,232,0.38)', marginTop: 2 }}>
@@ -119,7 +119,7 @@ export default function CompatibilityPage() {
           </p>
         </div>
 
-        <div className="flex-1 overflow-y-auto px-5 py-6 max-w-lg mx-auto w-full">
+        <div className="flex-1 overflow-y-auto px-4 py-5 max-w-lg mx-auto w-full">
 
           {view === 'form' && (
             <div className="flex flex-col gap-5 animate-fade-in">
@@ -129,7 +129,7 @@ export default function CompatibilityPage() {
                 ))}
               </p>
 
-              <div style={{ ...card, padding: '20px' }}>
+              <div style={{ ...card, padding: 'var(--card-pad-sm)' }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
                   <div>
                     <label style={fieldLabel}>{t.theirName}</label>
@@ -264,7 +264,7 @@ export default function CompatibilityPage() {
                 { title: t.sectionAttention, content: report.sections.payAttention },
                 { title: t.sectionChemistry, content: report.sections.chemistryVsLongevity },
               ].map(({ title, content }) => (
-                <div key={title} style={{ ...card, padding: '18px' }}>
+                <div key={title} style={{ ...card, padding: 'var(--card-pad-sm)' }}>
                   <p style={goldLabel}>{title}</p>
                   <p style={{ fontFamily: 'var(--font-body)', fontSize: 14, fontWeight: 300, color: 'var(--text-card-secondary)', lineHeight: 1.7 }}>
                     {content}
@@ -273,7 +273,7 @@ export default function CompatibilityPage() {
               ))}
 
               {/* Questions */}
-              <div style={{ ...card, padding: '18px', border: '0.5px solid rgba(200,149,108,0.25)' }}>
+              <div style={{ ...card, padding: 'var(--card-pad-sm)', border: '0.5px solid rgba(200,149,108,0.25)' }}>
                 <p style={goldLabel}>{t.questionsTitle}</p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                   {report.sections.questionsToExplore.map((q, i) => (

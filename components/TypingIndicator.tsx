@@ -2,13 +2,12 @@
 
 export function TypingIndicator() {
   return (
-    <div className="flex items-start gap-2 animate-bubble-in">
+    <div className="flex items-start animate-bubble-in">
       <div
         style={{
-          background: 'var(--card-bg)',
-          border: '0.5px solid rgba(200,149,108,0.20)',
-          borderRadius: '20px 20px 20px 4px',
-          padding: '12px 16px',
+          background: '#F3EFE9',
+          borderRadius: '18px 18px 18px 4px',
+          padding: '11px 16px',
           display: 'flex',
           gap: 5,
           alignItems: 'center',
@@ -18,10 +17,10 @@ export function TypingIndicator() {
           <span
             key={i}
             style={{
-              width: 6,
-              height: 6,
+              width: 5,
+              height: 5,
               borderRadius: '50%',
-              background: 'var(--gold)',
+              background: 'rgba(16,16,16,0.30)',
               display: 'block',
               animation: `typing 1.4s ease-in-out infinite`,
               animationDelay: `${i * 0.22}s`,

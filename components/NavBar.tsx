@@ -18,11 +18,12 @@ export function NavBar() {
     <nav
       className="fixed bottom-0 left-0 right-0 flex items-center justify-around z-50"
       style={{
-        background: 'rgba(16,13,10,0.94)',
-        backdropFilter: 'blur(20px)',
-        borderTop: '1px solid rgba(200,149,108,0.18)',
+        background: 'rgba(255,255,255,0.96)',
+        backdropFilter: 'blur(16px)',
+        WebkitBackdropFilter: 'blur(16px)',
+        borderTop: '1px solid rgba(0,0,0,0.07)',
         paddingBottom: 'env(safe-area-inset-bottom, 0px)',
-        height: '60px',
+        height: '58px',
       }}
     >
       {TABS.map(({ href, label, icon: Icon }) => {
@@ -32,15 +33,16 @@ export function NavBar() {
             key={href}
             href={href}
             className="flex flex-col items-center gap-0.5 px-6 py-2 transition-opacity"
-            style={{ opacity: active ? 1 : 0.38 }}
+            style={{ opacity: active ? 1 : 0.28 }}
           >
-            <Icon size={20} color={active ? '#C8956C' : 'rgba(245,239,232,0.65)'} />
+            <Icon size={20} color="#101010" />
             <span
               style={{
                 fontFamily: 'var(--font-body)',
-                fontSize: 9.5,
-                color: active ? '#C8956C' : 'rgba(245,239,232,0.45)',
-                letterSpacing: '0.04em',
+                fontSize: 9,
+                color: '#101010',
+                letterSpacing: '0.06em',
+                textTransform: 'uppercase' as const,
               }}
             >
               {label}
@@ -52,7 +54,7 @@ export function NavBar() {
   )
 }
 
-function ChatIcon({ size = 20, color = 'rgba(245,239,232,0.65)' }) {
+function ChatIcon({ size = 20, color = '#101010' }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -60,7 +62,7 @@ function ChatIcon({ size = 20, color = 'rgba(245,239,232,0.65)' }) {
   )
 }
 
-function CompatibilityIcon({ size = 20, color = 'rgba(245,239,232,0.65)' }) {
+function CompatibilityIcon({ size = 20, color = '#101010' }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <circle cx="9" cy="12" r="4" stroke={color} strokeWidth="1.5" />
@@ -69,7 +71,7 @@ function CompatibilityIcon({ size = 20, color = 'rgba(245,239,232,0.65)' }) {
   )
 }
 
-function PortraitIcon({ size = 20, color = 'rgba(245,239,232,0.65)' }) {
+function PortraitIcon({ size = 20, color = '#101010' }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <circle cx="12" cy="8" r="3" stroke={color} strokeWidth="1.5" />

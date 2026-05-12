@@ -2,8 +2,6 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import { Background } from '@/components/Background'
-import { MiaLogo } from '@/components/MiaLogo'
 import { NavBar } from '@/components/NavBar'
 import { ChatBubble } from '@/components/ChatBubble'
 import { TypingIndicator } from '@/components/TypingIndicator'
@@ -135,7 +133,7 @@ export default function ChatPage() {
         return updated
       })
     }
-  }, [messages, isTyping, profile, portrait])
+  }, [messages, isTyping, profile, portrait, lang])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -148,41 +146,43 @@ export default function ChatPage() {
 
   return (
     <>
-      <Background />
-      <div className="flex flex-col h-dvh">
+      <div className="flex flex-col h-dvh" style={{ background: '#FAFAF8' }}>
+
         {/* Header */}
-        <div
-          style={{
-            background: 'rgba(16,13,10,0.94)',
-            backdropFilter: 'blur(20px)',
-            borderBottom: '1px solid rgba(200,149,108,0.18)',
-            padding: '14px 20px 12px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 12,
-            flexShrink: 0,
-            paddingTop: 'max(14px, env(safe-area-inset-top))',
-          }}
-        >
-          <MiaLogo size={28} />
+        <div style={{
+          background: 'rgba(255,255,255,0.96)',
+          backdropFilter: 'blur(16px)',
+          WebkitBackdropFilter: 'blur(16px)',
+          borderBottom: '1px solid rgba(0,0,0,0.07)',
+          padding: '11px 16px 10px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 10,
+          flexShrink: 0,
+          paddingTop: 'max(11px, env(safe-area-inset-top))',
+        }}>
+          {/* Mia avatar dot */}
+          <div style={{ width: 28, height: 28, borderRadius: '50%', background: '#101010', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <span style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 11, color: 'rgba(255,255,255,0.85)', lineHeight: 1 }}>m</span>
+          </div>
           <div>
-            <p style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 18, color: 'rgba(245,239,232,0.92)', lineHeight: 1 }}>
+            <p style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 17, color: '#101010', lineHeight: 1 }}>
               mia
             </p>
-            <p style={{ fontFamily: 'var(--font-body)', fontSize: 10, color: 'rgba(245,239,232,0.38)', marginTop: 2 }}>
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: 10, color: 'rgba(16,16,16,0.38)', marginTop: 1 }}>
               {t.yourRelFriend}
             </p>
           </div>
           {profile.name && (
-            <p style={{ fontFamily: 'var(--font-body)', fontSize: 11, color: 'rgba(245,239,232,0.22)', marginLeft: 'auto' }}>
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: 11, color: 'rgba(16,16,16,0.28)', marginLeft: 'auto' }}>
               {profile.name}
             </p>
           )}
         </div>
 
         {/* Messages */}
-        <div className="flex-1 overflow-y-auto" style={{ padding: '16px 16px 0' }}>
-          <div className="flex flex-col gap-4 max-w-lg mx-auto">
+        <div className="flex-1 overflow-y-auto" style={{ padding: '14px 14px 0', background: '#FAFAF8' }}>
+          <div className="flex flex-col gap-3 max-w-lg mx-auto">
             {messages.map((msg) => (
               <ChatBubble key={msg.id} message={msg} />
             ))}
@@ -193,7 +193,7 @@ export default function ChatPage() {
 
         {/* Quick replies */}
         {showReplies && !isTyping && (
-          <div className="max-w-lg mx-auto w-full">
+          <div className="max-w-lg mx-auto w-full" style={{ background: '#FAFAF8' }}>
             <QuickReply
               options={t.quickReplies as unknown as string[]}
               onSelect={(opt) => sendMessage(opt)}
@@ -202,16 +202,15 @@ export default function ChatPage() {
         )}
 
         {/* Input bar */}
-        <div
-          style={{
-            background: 'rgba(16,13,10,0.92)',
-            backdropFilter: 'blur(20px)',
-            borderTop: '1px solid rgba(200,149,108,0.12)',
-            padding: '10px 16px',
-            paddingBottom: 'calc(60px + max(10px, env(safe-area-inset-bottom)))',
-            flexShrink: 0,
-          }}
-        >
+        <div style={{
+          background: 'rgba(255,255,255,0.96)',
+          backdropFilter: 'blur(16px)',
+          WebkitBackdropFilter: 'blur(16px)',
+          borderTop: '1px solid rgba(0,0,0,0.07)',
+          padding: '8px 12px',
+          paddingBottom: 'calc(58px + max(8px, env(safe-area-inset-bottom)))',
+          flexShrink: 0,
+        }}>
           <form onSubmit={handleSubmit} className="flex gap-2 items-center max-w-lg mx-auto">
             <input
               ref={inputRef}
@@ -220,43 +219,44 @@ export default function ChatPage() {
               placeholder={t.sayAnything}
               style={{
                 flex: 1,
-                background: 'rgba(26,23,20,0.65)',
-                border: '1px solid rgba(200,149,108,0.35)',
-                borderRadius: 26,
-                padding: '10px 16px',
-                color: 'rgba(245,239,232,0.88)',
+                background: 'transparent',
+                border: '1px solid rgba(245,165,35,0.40)',
+                borderRadius: 24,
+                padding: '9px 16px',
+                color: 'rgba(16,16,16,0.80)',
                 fontFamily: 'var(--font-body)',
                 fontSize: 14,
                 outline: 'none',
                 transition: 'border-color 200ms',
               }}
-              onFocus={(e) => { e.target.style.borderColor = 'rgba(200,149,108,0.65)' }}
-              onBlur={(e) => { e.target.style.borderColor = 'rgba(200,149,108,0.35)' }}
+              onFocus={(e) => { e.target.style.borderColor = 'rgba(245,165,35,0.75)' }}
+              onBlur={(e) => { e.target.style.borderColor = 'rgba(245,165,35,0.40)' }}
             />
             <button
               type="submit"
               disabled={!canSend}
               style={{
-                width: 38,
-                height: 38,
+                width: 36,
+                height: 36,
                 borderRadius: '50%',
-                background: canSend ? '#1A1714' : 'rgba(26,23,20,0.40)',
-                border: `1px solid ${canSend ? 'rgba(200,149,108,0.55)' : 'rgba(245,239,232,0.08)'}`,
+                background: canSend ? '#101010' : 'rgba(16,16,16,0.08)',
+                border: 'none',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 cursor: canSend ? 'pointer' : 'not-allowed',
-                transition: 'all 160ms ease',
+                transition: 'all 150ms ease',
                 flexShrink: 0,
               }}
             >
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
-                <path d="M22 2L11 13" stroke={canSend ? '#C8956C' : 'rgba(245,239,232,0.22)'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke={canSend ? '#C8956C' : 'rgba(245,239,232,0.22)'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <path d="M22 2L11 13" stroke={canSend ? '#fff' : 'rgba(16,16,16,0.30)'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke={canSend ? '#fff' : 'rgba(16,16,16,0.30)'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </button>
           </form>
         </div>
+
       </div>
       <NavBar />
     </>
