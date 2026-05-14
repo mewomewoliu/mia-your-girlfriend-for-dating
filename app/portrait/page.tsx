@@ -54,15 +54,20 @@ export default function PortraitPage() {
       <div className="flex flex-col min-h-dvh" style={{ paddingTop: 'env(safe-area-inset-top)', paddingBottom: 80 }}>
         {/* Header */}
         <div style={{
-          background: 'rgba(16,13,10,0.94)',
+          background: 'rgba(18,17,16,0.97)',
           backdropFilter: 'blur(20px)',
-          borderBottom: '1px solid rgba(200,149,108,0.18)',
-          padding: '12px 16px',
+          borderBottom: '1px solid rgba(255,255,255,0.08)',
+          padding: '0 20px',
+          height: 56,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          flexShrink: 0,
         }}>
-          <p style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 18, color: 'rgba(245,239,232,0.92)' }}>
+          <p style={{ fontFamily: 'var(--font-body)', fontSize: 14, fontWeight: 600, color: 'rgba(255,255,255,0.90)', letterSpacing: '-0.01em' }}>
             {t.portraitTitle}
           </p>
-          <p style={{ fontFamily: 'var(--font-body)', fontSize: 11, color: 'rgba(245,239,232,0.38)', marginTop: 2 }}>
+          <p style={{ fontFamily: 'var(--font-body)', fontSize: 11, color: 'rgba(255,255,255,0.35)', marginTop: 2 }}>
             {t.portraitSub}
           </p>
         </div>

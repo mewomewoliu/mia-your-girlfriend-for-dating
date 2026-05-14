@@ -4,9 +4,8 @@ import { buildCompatibilityPrompt } from '@/lib/mia-prompt'
 import { deriveRawChart } from '@/lib/chart'
 import type { UserProfile, CompatibilityReport } from '@/lib/types'
 
-const client = new Anthropic()
-
 export async function POST(req: NextRequest) {
+  const client = new Anthropic()
   try {
     const { profile, partnerName, partnerBirthDate, partnerBirthTime, partnerBirthCity, language } =
       (await req.json()) as {

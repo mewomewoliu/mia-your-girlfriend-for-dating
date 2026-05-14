@@ -18,10 +18,10 @@ export function NavBar() {
     <nav
       className="fixed bottom-0 left-0 right-0 flex items-center justify-around z-50"
       style={{
-        background: 'rgba(255,255,255,0.96)',
+        background: 'rgba(18,17,16,0.97)',
         backdropFilter: 'blur(16px)',
         WebkitBackdropFilter: 'blur(16px)',
-        borderTop: '1px solid rgba(0,0,0,0.07)',
+        borderTop: '1px solid rgba(255,255,255,0.08)',
         paddingBottom: 'env(safe-area-inset-bottom, 0px)',
         height: '58px',
       }}
@@ -33,14 +33,14 @@ export function NavBar() {
             key={href}
             href={href}
             className="flex flex-col items-center gap-0.5 px-6 py-2 transition-opacity"
-            style={{ opacity: active ? 1 : 0.28 }}
+            style={{ opacity: active ? 1 : 0.32 }}
           >
-            <Icon size={20} color="#101010" />
+            <Icon size={20} color="rgba(255,255,255,0.90)" />
             <span
               style={{
                 fontFamily: 'var(--font-body)',
                 fontSize: 9,
-                color: '#101010',
+                color: 'rgba(255,255,255,0.90)',
                 letterSpacing: '0.06em',
                 textTransform: 'uppercase' as const,
               }}

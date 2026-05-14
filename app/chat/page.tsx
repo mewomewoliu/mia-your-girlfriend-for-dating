@@ -150,11 +150,11 @@ export default function ChatPage() {
 
         {/* Header */}
         <div style={{
-          background: 'rgba(255,255,255,0.96)',
+          background: 'rgba(18,17,16,0.97)',
           backdropFilter: 'blur(16px)',
           WebkitBackdropFilter: 'blur(16px)',
-          borderBottom: '1px solid rgba(0,0,0,0.07)',
-          padding: '11px 16px 10px',
+          borderBottom: '1px solid rgba(255,255,255,0.08)',
+          padding: '11px 20px 10px',
           display: 'flex',
           alignItems: 'center',
           gap: 10,
@@ -162,19 +162,19 @@ export default function ChatPage() {
           paddingTop: 'max(11px, env(safe-area-inset-top))',
         }}>
           {/* Mia avatar dot */}
-          <div style={{ width: 28, height: 28, borderRadius: '50%', background: '#101010', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.20)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
             <span style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 11, color: 'rgba(255,255,255,0.85)', lineHeight: 1 }}>m</span>
           </div>
           <div>
-            <p style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 17, color: '#101010', lineHeight: 1 }}>
+            <p style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 17, color: 'rgba(255,255,255,0.90)', lineHeight: 1 }}>
               mia
             </p>
-            <p style={{ fontFamily: 'var(--font-body)', fontSize: 10, color: 'rgba(16,16,16,0.38)', marginTop: 1 }}>
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: 10, color: 'rgba(255,255,255,0.35)', marginTop: 1 }}>
               {t.yourRelFriend}
             </p>
           </div>
           {profile.name && (
-            <p style={{ fontFamily: 'var(--font-body)', fontSize: 11, color: 'rgba(16,16,16,0.28)', marginLeft: 'auto' }}>
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: 11, color: 'rgba(255,255,255,0.28)', marginLeft: 'auto' }}>
               {profile.name}
             </p>
           )}
@@ -203,11 +203,11 @@ export default function ChatPage() {
 
         {/* Input bar */}
         <div style={{
-          background: 'rgba(255,255,255,0.96)',
+          background: 'rgba(18,17,16,0.97)',
           backdropFilter: 'blur(16px)',
           WebkitBackdropFilter: 'blur(16px)',
-          borderTop: '1px solid rgba(0,0,0,0.07)',
-          padding: '8px 12px',
+          borderTop: '1px solid rgba(255,255,255,0.08)',
+          padding: '8px 16px',
           paddingBottom: 'calc(58px + max(8px, env(safe-area-inset-bottom)))',
           flexShrink: 0,
         }}>
@@ -219,18 +219,18 @@ export default function ChatPage() {
               placeholder={t.sayAnything}
               style={{
                 flex: 1,
-                background: 'transparent',
-                border: '1px solid rgba(245,165,35,0.40)',
+                background: 'rgba(255,255,255,0.08)',
+                border: '1px solid rgba(255,255,255,0.14)',
                 borderRadius: 24,
                 padding: '9px 16px',
-                color: 'rgba(16,16,16,0.80)',
+                color: 'rgba(255,255,255,0.85)',
                 fontFamily: 'var(--font-body)',
                 fontSize: 14,
                 outline: 'none',
                 transition: 'border-color 200ms',
               }}
-              onFocus={(e) => { e.target.style.borderColor = 'rgba(245,165,35,0.75)' }}
-              onBlur={(e) => { e.target.style.borderColor = 'rgba(245,165,35,0.40)' }}
+              onFocus={(e) => { e.target.style.borderColor = 'rgba(255,255,255,0.35)' }}
+              onBlur={(e) => { e.target.style.borderColor = 'rgba(255,255,255,0.14)' }}
             />
             <button
               type="submit"
@@ -239,7 +239,7 @@ export default function ChatPage() {
                 width: 36,
                 height: 36,
                 borderRadius: '50%',
-                background: canSend ? '#101010' : 'rgba(16,16,16,0.08)',
+                background: canSend ? 'rgba(255,255,255,0.92)' : 'rgba(255,255,255,0.10)',
                 border: 'none',
                 display: 'flex',
                 alignItems: 'center',
@@ -250,8 +250,8 @@ export default function ChatPage() {
               }}
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-                <path d="M22 2L11 13" stroke={canSend ? '#fff' : 'rgba(16,16,16,0.30)'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke={canSend ? '#fff' : 'rgba(16,16,16,0.30)'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M22 2L11 13" stroke={canSend ? '#101010' : 'rgba(255,255,255,0.25)'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke={canSend ? '#101010' : 'rgba(255,255,255,0.25)'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </button>
           </form>

@@ -118,7 +118,7 @@ input[type="date"], input[type="time"] {
 .welcome-root {
   position: fixed;
   inset: 0;
-  background: #fff;
+  background: #1a1a1a;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -128,23 +128,29 @@ input[type="date"], input[type="time"] {
 .welcome-left {
   flex: 1;
   position: relative;
-  border-radius: 32px;
+  border-radius: 16px;
   overflow: hidden;
   min-width: 0;
+  background: #fff;
 }
 
 .welcome-right {
-  width: min(511px, 38vw);
+  width: min(480px, 36vw);
   min-width: 300px;
   flex-shrink: 0;
-  background: #fdfdfd;
-  border: 1px solid rgba(0,0,0,0.12);
-  border-radius: 25px;
-  padding: clamp(20px, 3vw, 32px);
+  background: #fff;
+  border-radius: 16px;
+  padding: clamp(24px, 3vw, 36px);
   display: flex;
   flex-direction: column;
   overflow-y: auto;
   gap: 0;
+}
+
+@media (max-width: 860px) {
+  .welcome-right {
+    width: min(400px, 44vw);
+  }
 }
 
 @media (max-width: 700px) {
@@ -152,11 +158,10 @@ input[type="date"], input[type="time"] {
   .welcome-right {
     width: 100%;
     min-width: unset;
-    border-radius: 20px;
-    border: none;
-    background: transparent;
+    border-radius: 16px;
+    background: #fff;
   }
-  .welcome-root { background: #f8f7f5; }
+  .welcome-root { background: #1a1a1a; }
 }
 
 /* ── Scrollbar ───────────────────────────────── */

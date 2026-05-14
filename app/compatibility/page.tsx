@@ -61,22 +61,24 @@ export default function CompatibilityPage() {
 
   const fieldInput: React.CSSProperties = {
     width: '100%',
-    background: 'rgba(255,255,255,0.72)',
-    border: '1px solid rgba(200,149,108,0.32)',
-    borderRadius: 14,
-    padding: '11px 16px',
-    color: 'var(--text-card)',
+    background: '#fff',
+    border: '1px solid rgba(0,0,0,0.12)',
+    borderRadius: 8,
+    padding: '12px 14px',
+    color: '#101010',
     fontFamily: 'var(--font-body)',
     fontSize: 14,
     outline: 'none',
+    textAlign: 'center',
     transition: 'border-color 200ms',
   }
 
   const fieldLabel: React.CSSProperties = {
     fontFamily: 'var(--font-body)',
     fontSize: 10,
-    color: 'var(--text-card-muted)',
+    color: 'rgba(0,0,0,0.40)',
     letterSpacing: '0.06em',
+    textTransform: 'uppercase',
     display: 'block',
     marginBottom: 6,
   }
@@ -92,10 +94,10 @@ export default function CompatibilityPage() {
   }
 
   const focusGold = (e: React.FocusEvent<HTMLInputElement>) => {
-    e.target.style.borderColor = 'rgba(200,149,108,0.65)'
+    e.target.style.borderColor = 'rgba(0,0,0,0.35)'
   }
   const blurGold = (e: React.FocusEvent<HTMLInputElement>) => {
-    e.target.style.borderColor = 'rgba(200,149,108,0.32)'
+    e.target.style.borderColor = 'rgba(0,0,0,0.12)'
   }
 
   if (!profile) return null
@@ -106,15 +108,20 @@ export default function CompatibilityPage() {
       <div className="flex flex-col min-h-dvh" style={{ paddingTop: 'env(safe-area-inset-top)', paddingBottom: 80 }}>
         {/* Header */}
         <div style={{
-          background: 'rgba(16,13,10,0.94)',
+          background: 'rgba(18,17,16,0.97)',
           backdropFilter: 'blur(20px)',
-          borderBottom: '1px solid rgba(200,149,108,0.18)',
-          padding: '12px 16px',
+          borderBottom: '1px solid rgba(255,255,255,0.08)',
+          padding: '0 20px',
+          height: 56,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          flexShrink: 0,
         }}>
-          <p style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 18, color: 'rgba(245,239,232,0.92)' }}>
+          <p style={{ fontFamily: 'var(--font-body)', fontSize: 14, fontWeight: 600, color: 'rgba(255,255,255,0.90)', letterSpacing: '-0.01em' }}>
             {t.compatTitle}
           </p>
-          <p style={{ fontFamily: 'var(--font-body)', fontSize: 11, color: 'rgba(245,239,232,0.38)', marginTop: 2 }}>
+          <p style={{ fontFamily: 'var(--font-body)', fontSize: 11, color: 'rgba(255,255,255,0.35)', marginTop: 2 }}>
             {t.compatSub}
           </p>
         </div>
@@ -123,13 +130,13 @@ export default function CompatibilityPage() {
 
           {view === 'form' && (
             <div className="flex flex-col gap-5 animate-fade-in">
-              <p style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 22, color: 'rgba(245,239,232,0.92)', lineHeight: 1.35 }}>
+              <p style={{ fontFamily: 'var(--font-body)', fontSize: 'clamp(18px, 2vw, 22px)', fontWeight: 700, color: 'rgba(245,239,232,0.92)', letterSpacing: '-0.02em', lineHeight: 1.3 }}>
                 {t.compatFormTitle.split('\n').map((line, i, arr) => (
                   <span key={i}>{line}{i < arr.length - 1 && <br />}</span>
                 ))}
               </p>
 
-              <div style={{ ...card, padding: 'var(--card-pad-sm)' }}>
+              <div style={{ background: '#fff', borderRadius: 12, padding: 'var(--card-pad-sm)' }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
                   <div>
                     <label style={fieldLabel}>{t.theirName}</label>

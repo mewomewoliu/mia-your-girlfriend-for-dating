@@ -3,9 +3,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { deriveRawChart } from '@/lib/chart'
 import type { ChartData } from '@/lib/types'
 
-const client = new Anthropic()
-
 export async function POST(req: NextRequest) {
+  const client = new Anthropic()
   try {
     const { birthDate, birthTime, birthCity, intentions, language } = await req.json()
     const lang: 'en' | 'zh' = language ?? 'en'
