@@ -63,7 +63,8 @@ Rules:
 
     return NextResponse.json(chartData)
   } catch (err) {
-    console.error('Chart API error:', err)
-    return NextResponse.json({ error: 'Chart generation failed' }, { status: 500 })
+    const msg = err instanceof Error ? err.message : String(err)
+    console.error('Chart API error:', msg)
+    return NextResponse.json({ error: 'Chart generation failed', debug: msg }, { status: 500 })
   }
 }
