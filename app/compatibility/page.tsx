@@ -70,7 +70,7 @@ export default function CompatibilityPage() {
   const card: React.CSSProperties = {
     background: 'var(--card-bg)',
     border: '0.5px solid var(--card-border)',
-    borderRadius: 16,
+    borderRadius: isMobile ? 20 : 16,
     boxShadow: 'var(--card-shadow)',
   }
 
@@ -91,7 +91,7 @@ export default function CompatibilityPage() {
   const fieldLabel: React.CSSProperties = {
     fontFamily: 'var(--font-body)',
     fontSize: 10,
-    color: 'rgba(0,0,0,0.40)',
+    color: 'rgba(0,0,0,0.55)',
     letterSpacing: '0.06em',
     textTransform: 'uppercase',
     display: 'block',
@@ -159,7 +159,7 @@ export default function CompatibilityPage() {
                 ))}
               </p>
 
-              <div style={{ background: '#fff', borderRadius: 12, padding: 'var(--card-pad-sm)' }}>
+              <div style={{ background: '#fff', borderRadius: isMobile ? 20 : 12, padding: 'var(--card-pad-sm)' }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
                   <div>
                     <label style={fieldLabel}>{t.theirName}</label>
@@ -169,17 +169,27 @@ export default function CompatibilityPage() {
                   </div>
                   <div>
                     <label style={fieldLabel}>{t.birthDate}</label>
-                    <input type="date" style={fieldInput} value={partnerBirthDate}
+                    <input
+                      type={isMobile ? 'text' : 'date'}
+                      style={fieldInput}
+                      value={partnerBirthDate}
+                      placeholder={isMobile ? (lang === 'zh' ? '例如 1995年1月15日' : 'e.g. Jan 15 1995') : undefined}
                       onChange={(e) => setPartnerBirthDate(e.target.value)}
-                      onFocus={focusGold} onBlur={blurGold} />
+                      onFocus={focusGold} onBlur={blurGold}
+                    />
                   </div>
                   <div>
                     <label style={fieldLabel}>
                       {t.birthTime} <span style={{ opacity: 0.5, fontStyle: 'italic' }}>{t.birthTimeOptionalLabel}</span>
                     </label>
-                    <input type="time" style={fieldInput} value={partnerBirthTime}
+                    <input
+                      type={isMobile ? 'text' : 'time'}
+                      style={fieldInput}
+                      value={partnerBirthTime}
+                      placeholder={isMobile ? (lang === 'zh' ? '例如 15:30（可选）' : 'e.g. 3:30 pm (optional)') : undefined}
                       onChange={(e) => setPartnerBirthTime(e.target.value)}
-                      onFocus={focusGold} onBlur={blurGold} />
+                      onFocus={focusGold} onBlur={blurGold}
+                    />
                   </div>
                   <div>
                     <label style={fieldLabel}>
@@ -202,18 +212,20 @@ export default function CompatibilityPage() {
                 onClick={generate}
                 disabled={!partnerName || !partnerBirthDate}
                 style={{
-                  background: 'var(--btn)',
+                  background: isMobile
+                    ? (partnerName && partnerBirthDate ? '#C8956C' : 'rgba(200,149,108,0.35)')
+                    : 'var(--btn)',
                   border: 'none',
-                  borderRadius: 50,
+                  borderRadius: isMobile ? 14 : 50,
                   padding: '13px 28px',
-                  color: 'rgba(245,239,232,0.92)',
+                  color: '#fff',
                   fontFamily: 'var(--font-body)',
                   fontSize: 14,
                   fontWeight: 500,
                   cursor: partnerName && partnerBirthDate ? 'pointer' : 'not-allowed',
-                  opacity: partnerName && partnerBirthDate ? 1 : 0.38,
+                  opacity: isMobile ? 1 : (partnerName && partnerBirthDate ? 1 : 0.38),
                   alignSelf: 'stretch',
-                  transition: 'opacity 160ms',
+                  transition: 'background 150ms',
                 }}
               >
                 {t.generateReading}
@@ -221,7 +233,7 @@ export default function CompatibilityPage() {
 
               {history.length > 0 && (
                 <div className="flex flex-col gap-3 mt-2">
-                  <p style={{ fontFamily: 'var(--font-body)', fontSize: 10, color: 'rgba(245,239,232,0.32)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>{t.pastReadings}</p>
+                  <p style={{ fontFamily: 'var(--font-body)', fontSize: 10, color: 'rgba(245,239,232,0.55)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>{t.pastReadings}</p>
                   {history.map((r, i) => (
                     <button
                       key={i}
@@ -320,11 +332,11 @@ export default function CompatibilityPage() {
               <button
                 onClick={() => router.push('/chat')}
                 style={{
-                  background: 'var(--btn)',
+                  background: isMobile ? '#C8956C' : 'var(--btn)',
                   border: 'none',
-                  borderRadius: 50,
+                  borderRadius: isMobile ? 14 : 50,
                   padding: '13px 24px',
-                  color: 'rgba(245,239,232,0.92)',
+                  color: '#fff',
                   fontFamily: 'var(--font-body)',
                   fontSize: 14,
                   fontWeight: 500,

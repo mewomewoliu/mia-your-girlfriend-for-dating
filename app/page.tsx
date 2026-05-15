@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { getSupabaseBrowser } from '@/lib/supabase/browser'
 import { getProfile } from '@/lib/db'
 import { useLanguage } from '@/lib/language-context'
+import { useMobile } from '@/lib/hooks'
 import type { UserProfile, BirthData, Intentions } from '@/lib/types'
 
 type Step = 'welcome' | 'birth' | 'q1' | 'q2' | 'q3' | 'generating' | 'chart'
@@ -101,6 +102,7 @@ export default function OnboardingPage() {
   const [magicState, setMagicState] = useState<MagicState>('idle')
   const [magicError, setMagicError] = useState('')
   const [googleLoading, setGoogleLoading] = useState(false)
+  const isMobile = useMobile()
 
   useEffect(() => {
     const supabase = getSupabaseBrowser()
@@ -433,14 +435,28 @@ export default function OnboardingPage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             <div>
               <label style={sl}>{t.birthDate}</label>
-              <input type="date" style={si} value={birth.date} onChange={(e) => setBirth({ ...birth, date: e.target.value })} onFocus={fa} onBlur={ba} />
+              <input
+                type={isMobile ? 'text' : 'date'}
+                style={si}
+                value={birth.date}
+                onChange={(e) => setBirth({ ...birth, date: e.target.value })}
+                placeholder={isMobile ? (lang === 'zh' ? '例如 1995年1月15日' : 'e.g. Jan 15 1995') : undefined}
+                onFocus={fa} onBlur={ba}
+              />
             </div>
             <div>
               <label style={sl}>
                 {t.birthTime}{' '}
                 <span style={{ opacity: 0.55, fontStyle: 'italic', textTransform: 'none', letterSpacing: 0 }}>{t.birthTimeOptional}</span>
               </label>
-              <input type="time" style={si} value={birth.time} onChange={(e) => setBirth({ ...birth, time: e.target.value })} onFocus={fa} onBlur={ba} />
+              <input
+                type={isMobile ? 'text' : 'time'}
+                style={si}
+                value={birth.time}
+                onChange={(e) => setBirth({ ...birth, time: e.target.value })}
+                placeholder={isMobile ? (lang === 'zh' ? '例如 15:30（可选）' : 'e.g. 3:30 pm (optional)') : undefined}
+                onFocus={fa} onBlur={ba}
+              />
             </div>
             <div>
               <label style={sl}>{t.birthCity}</label>

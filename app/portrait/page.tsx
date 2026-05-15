@@ -45,7 +45,7 @@ export default function PortraitPage() {
   const card: React.CSSProperties = {
     background: 'var(--card-bg)',
     border: '0.5px solid var(--card-border)',
-    borderRadius: 16,
+    borderRadius: isMobile ? 20 : 16,
     boxShadow: 'var(--card-shadow)',
     padding: 'var(--card-pad-sm)',
   }
@@ -185,11 +185,11 @@ export default function PortraitPage() {
             {/* Privacy */}
             <div style={{
               border: '1px solid rgba(200,149,108,0.18)',
-              borderRadius: 12,
+              borderRadius: isMobile ? 20 : 12,
               padding: '14px 16px',
-              background: 'rgba(26,23,20,0.40)',
+              background: isMobile ? '#fff' : 'rgba(26,23,20,0.40)',
             }}>
-              <p style={{ fontFamily: 'var(--font-body)', fontSize: 11, color: 'rgba(245,239,232,0.35)', lineHeight: 1.6 }}>
+              <p style={{ fontFamily: 'var(--font-body)', fontSize: 11, color: isMobile ? 'rgba(26,23,20,0.50)' : 'rgba(245,239,232,0.55)', lineHeight: 1.6 }}>
                 {t.privacyNote}
               </p>
             </div>
@@ -198,7 +198,7 @@ export default function PortraitPage() {
             {!showDeleteConfirm ? (
               <button
                 onClick={() => setShowDeleteConfirm(true)}
-                style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: 'rgba(245,239,232,0.22)', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'center', alignSelf: 'center' }}
+                style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: isMobile ? 'rgba(200,149,108,0.55)' : 'rgba(245,239,232,0.30)', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'center', alignSelf: 'center' }}
               >
                 {t.deleteData}
               </button>
