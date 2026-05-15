@@ -113,6 +113,10 @@ input[type="date"], input[type="time"] {
 .animate-fade-in   { animation: fade-in 400ms ease both; }
 .animate-bubble-in { animation: bubble-in 250ms ease both; }
 
+/* Mobile-only / desktop-only visibility helpers */
+.mob      { display: none; }
+.mob-flex { display: none; }
+
 /* ── Welcome split layout ───────────────────── */
 
 .welcome-root {
@@ -123,6 +127,14 @@ input[type="date"], input[type="time"] {
   flex-direction: column;
   overflow: hidden;
   color: #101010;
+}
+
+/* Row container — holds left image panel + right form panel */
+.welcome-split {
+  flex: 1;
+  display: flex;
+  gap: 14px;
+  min-height: 0;
 }
 
 .welcome-left {
@@ -148,20 +160,55 @@ input[type="date"], input[type="time"] {
 }
 
 @media (max-width: 860px) {
-  .welcome-right {
-    width: min(400px, 44vw);
-  }
+  .welcome-right { width: min(400px, 44vw); }
 }
 
+/* ── Mobile ≤ 700px: stacked card pattern ─────── */
+
 @media (max-width: 700px) {
-  .welcome-left { display: none; }
-  .welcome-right {
-    width: 100%;
-    min-width: unset;
-    border-radius: 16px;
-    background: #fff;
+  /* Visibility helpers */
+  .mob      { display: block; }
+  .mob-flex { display: flex; }
+  .desk     { display: none !important; }
+
+  /* Root: scrollable, dark bg */
+  .welcome-root {
+    background: #1a1a1a;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
-  .welcome-root { background: #1a1a1a; }
+
+  /* Stack cards vertically */
+  .welcome-split {
+    flex-direction: column;
+    gap: 12px;
+    min-height: 0;
+    padding-bottom: 20px;
+    overflow-y: visible;
+  }
+
+  /* Image card — shown at top as a tall card */
+  .welcome-left {
+    display: flex !important;
+    flex: none !important;
+    width: 100% !important;
+    height: clamp(190px, 46vw, 270px);
+    border-radius: 20px;
+    overflow: hidden;
+  }
+
+  /* Amber text overlaid on image card */
+  .welcome-left .img-heading { color: #C8956C !important; }
+  .welcome-left .img-sub     { color: rgba(200,149,108,0.88) !important; }
+
+  /* Form card */
+  .welcome-right {
+    width: 100% !important;
+    min-width: unset !important;
+    border-radius: 20px;
+    background: #fff;
+    flex-shrink: 0;
+  }
 }
 
 /* ── Scrollbar ───────────────────────────────── */

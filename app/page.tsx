@@ -65,14 +65,14 @@ function SplitScreen({ imgSrc, imgFit = 'contain', onBack, children }: {
             ←
           </button>
         )}
-        <span style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'rgba(255,255,255,0.82)', letterSpacing: '0.01em', fontWeight: 400 }}>
+        <span style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: '#C8956C', letterSpacing: '0.01em', fontWeight: 400 }}>
           {'{Mia: a girlfriend helps you date and love yourself }'}
         </span>
       </div>
 
       {/* Split area */}
-      <div style={{ flex: 1, padding: '0 16px 16px', display: 'flex', minHeight: 0 }}>
-        <div style={{ flex: 1, display: 'flex', gap: 14, minHeight: 0 }}>
+      <div style={{ flex: 1, padding: '0 16px 16px', display: 'flex', minHeight: 0, overflow: 'hidden' }}>
+        <div className="welcome-split">
           <div className="welcome-left">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={imgSrc} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: imgFit, pointerEvents: 'none' }} />
@@ -248,10 +248,11 @@ export default function OnboardingPage() {
       <div className="welcome-root animate-fade-in">
         {/* Top nav */}
         <div style={{ height: 56, padding: '0 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
-          <span style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'rgba(255,255,255,0.82)', letterSpacing: '0.01em', fontWeight: 400 }}>
+          <span style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: '#C8956C', letterSpacing: '0.01em', fontWeight: 400 }}>
             {'{Mia: a girlfriend helps you date and love yourself }'}
           </span>
           <button
+            className="desk"
             onClick={() => setStep('birth')}
             style={{ background: '#2b2b2b', border: 'none', borderRadius: 6, padding: '7px 16px', color: 'rgba(255,255,255,0.85)', fontFamily: 'var(--font-body)', fontSize: 12, fontWeight: 500, cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0 }}
           >
@@ -259,21 +260,21 @@ export default function OnboardingPage() {
           </button>
         </div>
 
-        <div style={{ flex: 1, padding: '0 16px 16px', display: 'flex', minHeight: 0 }}>
-          <div style={{ flex: 1, display: 'flex', gap: 14, minHeight: 0 }}>
+        <div style={{ flex: 1, padding: '0 16px 16px', display: 'flex', minHeight: 0, overflow: 'hidden' }}>
+          <div className="welcome-split">
 
             <div className="welcome-left">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/flower.png" alt="" style={{ position: 'absolute', top: '-5.58%', left: '-10%', width: '120%', height: '111%', objectFit: 'cover', pointerEvents: 'none' }} />
-              <div style={{ position: 'relative', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: 'clamp(20px, 3vw, 40px)' }}>
-                <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontStyle: 'normal', fontSize: 'clamp(28px, 3.8vw, 48px)', lineHeight: 1.25, color: '#101010', marginBottom: 12 }}>
+              <div style={{ position: 'relative', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: 'clamp(16px, 3vw, 40px)' }}>
+                <h1 className="img-heading" style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontStyle: 'normal', fontSize: 'clamp(22px, 3.8vw, 48px)', lineHeight: 1.25, color: '#101010', marginBottom: 8 }}>
                   {lang === 'zh' ? (
                     <>Mia <span style={{ color: '#7a6830' }}>是你的</span>女朋友</>
                   ) : (
                     <>Mia <span style={{ color: '#7a6830' }}>is your</span> girlfriend</>
                   )}
                 </h1>
-                <p style={{ fontFamily: 'var(--font-body)', fontSize: 'clamp(13px, 1.3vw, 17px)', lineHeight: 1.65, color: 'rgba(60,48,20,0.75)', maxWidth: 380, fontWeight: 400 }}>
+                <p className="img-sub" style={{ fontFamily: 'var(--font-body)', fontSize: 'clamp(12px, 1.3vw, 17px)', lineHeight: 1.65, color: 'rgba(60,48,20,0.75)', maxWidth: 380, fontWeight: 400 }}>
                   {lang === 'zh' ? '我在这里帮助你更聪明地恋爱，更清晰地理解爱。更重要的是，帮助你了解自己和爱自己。' : "I'm here to help you date smarter and feel clearer about love. And more importantly, I will help you to know yourself and love yourself while chase your love on other."}
                 </p>
               </div>

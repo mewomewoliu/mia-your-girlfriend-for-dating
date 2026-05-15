@@ -7,6 +7,7 @@ import { NavBar } from '@/components/NavBar'
 import { getSupabaseBrowser } from '@/lib/supabase/browser'
 import { getProfile, getCompatibility } from '@/lib/db'
 import { useLanguage } from '@/lib/language-context'
+import { useMobile } from '@/lib/hooks'
 import type { UserProfile, CompatibilityReport } from '@/lib/types'
 
 type ViewState = 'form' | 'generating' | 'report'
@@ -14,6 +15,7 @@ type ViewState = 'form' | 'generating' | 'report'
 export default function CompatibilityPage() {
   const router = useRouter()
   const { lang, t } = useLanguage()
+  const isMobile = useMobile()
   const [profile, setProfile] = useState<UserProfile | null>(null)
   const [view, setView] = useState<ViewState>('form')
   const [partnerName, setPartnerName] = useState('')
@@ -118,26 +120,34 @@ export default function CompatibilityPage() {
   return (
     <>
       <Background />
-      <div className="flex flex-col min-h-dvh" style={{ paddingTop: 'env(safe-area-inset-top)', paddingBottom: 80 }}>
+      <div className="flex flex-col min-h-dvh" style={{ paddingTop: isMobile ? 0 : 'env(safe-area-inset-top)', paddingBottom: 80 }}>
         {/* Header */}
-        <div style={{
-          background: 'rgba(18,17,16,0.97)',
-          backdropFilter: 'blur(20px)',
-          borderBottom: '1px solid rgba(255,255,255,0.08)',
-          padding: '0 20px',
-          height: 56,
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          flexShrink: 0,
-        }}>
-          <p style={{ fontFamily: 'var(--font-body)', fontSize: 14, fontWeight: 600, color: 'rgba(255,255,255,0.90)', letterSpacing: '-0.01em' }}>
-            {t.compatTitle}
-          </p>
-          <p style={{ fontFamily: 'var(--font-body)', fontSize: 11, color: 'rgba(255,255,255,0.35)', marginTop: 2 }}>
-            {t.compatSub}
-          </p>
-        </div>
+        {isMobile ? (
+          <div style={{ padding: 'max(16px, env(safe-area-inset-top)) 20px 12px', flexShrink: 0 }}>
+            <span style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: '#C8956C', letterSpacing: '0.01em', fontWeight: 400 }}>
+              {'{Mia: a girlfriend helps you date and love yourself }'}
+            </span>
+          </div>
+        ) : (
+          <div style={{
+            background: 'rgba(18,17,16,0.97)',
+            backdropFilter: 'blur(20px)',
+            borderBottom: '1px solid rgba(255,255,255,0.08)',
+            padding: '0 20px',
+            height: 56,
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            flexShrink: 0,
+          }}>
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: 14, fontWeight: 600, color: 'rgba(255,255,255,0.90)', letterSpacing: '-0.01em' }}>
+              {t.compatTitle}
+            </p>
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: 11, color: 'rgba(255,255,255,0.35)', marginTop: 2 }}>
+              {t.compatSub}
+            </p>
+          </div>
+        )}
 
         <div className="flex-1 overflow-y-auto px-4 py-5 max-w-lg mx-auto w-full">
 
