@@ -8,6 +8,18 @@ import { useLanguage } from '@/lib/language-context'
 import type { UserProfile, BirthData, Intentions } from '@/lib/types'
 
 type Step = 'welcome' | 'birth' | 'q1' | 'q2' | 'q3' | 'generating' | 'chart'
+type MagicState = 'idle' | 'sending' | 'sent' | 'error'
+
+function GoogleIcon() {
+  return (
+    <svg width="17" height="17" viewBox="0 0 18 18" fill="none">
+      <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908C16.658 14.252 17.64 11.945 17.64 9.2z" fill="#4285F4"/>
+      <path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z" fill="#34A853"/>
+      <path d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/>
+      <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/>
+    </svg>
+  )
+}
 
 function CelestialCircle() {
   return (
@@ -83,15 +95,50 @@ export default function OnboardingPage() {
   const [name, setName] = useState('')
   const [profile, setProfile] = useState<UserProfile | null>(null)
   const [generatingError, setGeneratingError] = useState('')
+  const [userId, setUserId] = useState<string | null>(null)
+  const [authChecked, setAuthChecked] = useState(false)
+  const [magicEmail, setMagicEmail] = useState('')
+  const [magicState, setMagicState] = useState<MagicState>('idle')
+  const [magicError, setMagicError] = useState('')
+  const [googleLoading, setGoogleLoading] = useState(false)
 
   useEffect(() => {
     const supabase = getSupabaseBrowser()
     supabase.auth.getUser().then(async ({ data: { user } }) => {
-      if (!user) { router.replace('/login'); return }
+      setAuthChecked(true)
+      if (!user) return
+      setUserId(user.id)
+      const pendingName = sessionStorage.getItem('mia_pending_name')
+      if (pendingName) { setName(pendingName); sessionStorage.removeItem('mia_pending_name') }
       const existing = await getProfile(supabase, user.id)
       if (existing?.onboardingComplete) router.replace('/chat')
     })
   }, [router])
+
+  async function handleGoogleSignIn() {
+    if (name.trim()) sessionStorage.setItem('mia_pending_name', name.trim())
+    setGoogleLoading(true)
+    const supabase = getSupabaseBrowser()
+    await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: `${window.location.origin}/auth/callback` },
+    })
+  }
+
+  async function handleMagicLink(e: React.FormEvent) {
+    e.preventDefault()
+    if (!magicEmail.trim()) return
+    if (name.trim()) sessionStorage.setItem('mia_pending_name', name.trim())
+    setMagicState('sending')
+    setMagicError('')
+    const supabase = getSupabaseBrowser()
+    const { error } = await supabase.auth.signInWithOtp({
+      email: magicEmail.trim(),
+      options: { emailRedirectTo: `${window.location.origin}/auth/callback`, shouldCreateUser: true },
+    })
+    if (error) { setMagicError(error.message); setMagicState('error') }
+    else setMagicState('sent')
+  }
 
   async function generateChart() {
     setStep('generating')
@@ -233,7 +280,7 @@ export default function OnboardingPage() {
             </div>
 
             <div className="welcome-right">
-              <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 'clamp(16px, 2.5vh, 28px)' }}>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 'clamp(12px, 2vh, 20px)' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                   <button onClick={() => setLang('en')} style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'var(--font-body)', fontSize: 13, color: lang === 'en' ? '#101010' : '#9b8340', padding: '4px 6px', fontWeight: lang === 'en' ? 500 : 400 }}>EN</button>
                   <span style={{ color: 'rgba(0,0,0,0.20)', fontSize: 13 }}>|</span>
@@ -241,16 +288,117 @@ export default function OnboardingPage() {
                 </div>
               </div>
 
-              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 'clamp(16px, 2.5vh, 24px)' }}>
-                <p style={{ fontFamily: 'var(--font-body)', fontSize: 'clamp(22px, 2.5vw, 28px)', fontWeight: 700, color: '#101010', letterSpacing: '-0.02em', lineHeight: 1.25, whiteSpace: 'pre-line' }}>
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 'clamp(12px, 2vh, 18px)', overflowY: 'auto' }}>
+                <p style={{ fontFamily: 'var(--font-body)', fontSize: 'clamp(20px, 2.2vw, 26px)', fontWeight: 700, color: '#101010', letterSpacing: '-0.02em', lineHeight: 1.25, whiteSpace: 'pre-line' }}>
                   {lang === 'zh' ? '{ 开始吧\n你叫什么名字？}' : "{ Get started\nwhat's your name? }"}
                 </p>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                  <input style={wInput} placeholder={t.namePlaceholder} value={name} onChange={(e) => setName(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && setStep('birth')} onFocus={faw} onBlur={baw} />
-                </div>
-                <button onClick={() => setStep('birth')} style={{ width: '100%', background: '#101010', border: 'none', borderRadius: 8, padding: '13px 14px', fontFamily: 'var(--font-body)', fontSize: 14, fontWeight: 500, color: '#fff', cursor: 'pointer', transition: 'opacity 160ms' }} onMouseEnter={(e) => { e.currentTarget.style.opacity = '0.80' }} onMouseLeave={(e) => { e.currentTarget.style.opacity = '1' }}>
-                  {lang === 'zh' ? '下一步' : 'Next step'}
-                </button>
+
+                <input
+                  style={wInput}
+                  placeholder={t.namePlaceholder}
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  onKeyDown={(e) => { if (e.key === 'Enter' && userId) setStep('birth') }}
+                  onFocus={faw} onBlur={baw}
+                />
+
+                {/* Authenticated: just show Next step */}
+                {userId && (
+                  <button
+                    onClick={() => setStep('birth')}
+                    style={{ width: '100%', background: '#101010', border: 'none', borderRadius: 8, padding: '13px 14px', fontFamily: 'var(--font-body)', fontSize: 14, fontWeight: 500, color: '#fff', cursor: 'pointer', transition: 'opacity 160ms' }}
+                    onMouseEnter={(e) => { e.currentTarget.style.opacity = '0.80' }}
+                    onMouseLeave={(e) => { e.currentTarget.style.opacity = '1' }}
+                  >
+                    {lang === 'zh' ? '下一步' : 'Next step'}
+                  </button>
+                )}
+
+                {/* Not authenticated: show sign-up options */}
+                {authChecked && !userId && (
+                  <>
+                    {magicState !== 'sent' ? (
+                      <>
+                        {/* Google */}
+                        <button
+                          onClick={handleGoogleSignIn}
+                          disabled={googleLoading}
+                          style={{
+                            width: '100%', background: '#fff', border: '1px solid rgba(0,0,0,0.14)', borderRadius: 8,
+                            padding: '12px 14px', fontFamily: 'var(--font-body)', fontSize: 14, fontWeight: 500,
+                            color: 'rgba(0,0,0,0.70)', cursor: googleLoading ? 'not-allowed' : 'pointer',
+                            opacity: googleLoading ? 0.55 : 1, display: 'flex', alignItems: 'center',
+                            justifyContent: 'center', gap: 9, transition: 'border-color 150ms, opacity 150ms',
+                          }}
+                          onMouseEnter={(e) => { if (!googleLoading) e.currentTarget.style.borderColor = 'rgba(0,0,0,0.28)' }}
+                          onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.14)' }}
+                        >
+                          <GoogleIcon />
+                          {googleLoading
+                            ? (lang === 'zh' ? '跳转中...' : 'redirecting...')
+                            : (lang === 'zh' ? '使用 Google 继续' : 'continue with Google')}
+                        </button>
+
+                        {/* Divider */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                          <div style={{ flex: 1, height: 1, background: 'rgba(0,0,0,0.08)' }} />
+                          <span style={{ fontFamily: 'var(--font-body)', fontSize: 11, color: 'rgba(0,0,0,0.30)', letterSpacing: '0.04em' }}>
+                            {lang === 'zh' ? '或' : 'or'}
+                          </span>
+                          <div style={{ flex: 1, height: 1, background: 'rgba(0,0,0,0.08)' }} />
+                        </div>
+
+                        {/* Email magic link */}
+                        <form onSubmit={handleMagicLink} style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                          <input
+                            type="email"
+                            placeholder={lang === 'zh' ? '你的邮箱' : 'your@email.com'}
+                            value={magicEmail}
+                            onChange={(e) => setMagicEmail(e.target.value)}
+                            required
+                            style={{ ...wInput }}
+                            onFocus={faw} onBlur={baw}
+                          />
+                          {magicState === 'error' && (
+                            <p style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: '#c0392b', textAlign: 'center' }}>{magicError}</p>
+                          )}
+                          <button
+                            type="submit"
+                            disabled={magicState === 'sending' || !magicEmail.trim()}
+                            style={{
+                              width: '100%', background: '#101010', border: 'none', borderRadius: 8,
+                              padding: '13px 14px', fontFamily: 'var(--font-body)', fontSize: 14, fontWeight: 500,
+                              color: '#fff', cursor: magicState === 'sending' || !magicEmail.trim() ? 'not-allowed' : 'pointer',
+                              opacity: magicState === 'sending' || !magicEmail.trim() ? 0.40 : 1,
+                              transition: 'opacity 160ms',
+                            }}
+                          >
+                            {magicState === 'sending'
+                              ? (lang === 'zh' ? '发送中...' : 'sending...')
+                              : (lang === 'zh' ? '发送魔法链接 →' : 'send magic link →')}
+                          </button>
+                        </form>
+                      </>
+                    ) : (
+                      <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', gap: 10, padding: '4px 0' }}>
+                        <p style={{ fontFamily: 'var(--font-body)', fontSize: 15, fontWeight: 600, color: '#101010', letterSpacing: '-0.01em' }}>
+                          {lang === 'zh' ? '查看你的邮箱' : 'check your email'}
+                        </p>
+                        <p style={{ fontFamily: 'var(--font-body)', fontSize: 13, fontWeight: 300, color: 'rgba(0,0,0,0.50)', lineHeight: 1.6 }}>
+                          {lang === 'zh'
+                            ? `我们已向 ${magicEmail} 发送了一个魔法链接。点击它即可登录。`
+                            : `we sent a magic link to ${magicEmail}. click it to sign in.`}
+                        </p>
+                        <button
+                          onClick={() => { setMagicState('idle'); setMagicEmail('') }}
+                          style={{ background: 'none', border: 'none', fontFamily: 'var(--font-body)', fontSize: 12, color: 'rgba(0,0,0,0.30)', cursor: 'pointer' }}
+                        >
+                          {lang === 'zh' ? '使用其他邮箱' : 'use a different email'}
+                        </button>
+                      </div>
+                    )}
+                  </>
+                )}
               </div>
             </div>
 
