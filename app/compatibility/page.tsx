@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Background } from '@/components/Background'
 import { NavBar } from '@/components/NavBar'
-import { storage } from '@/lib/storage'
+import { getSupabaseBrowser } from '@/lib/supabase/browser'
+import { getProfile, getCompatibility } from '@/lib/db'
 import { useLanguage } from '@/lib/language-context'
 import type { UserProfile, CompatibilityReport } from '@/lib/types'
 
@@ -24,10 +25,17 @@ export default function CompatibilityPage() {
   const [history, setHistory] = useState<CompatibilityReport[]>([])
 
   useEffect(() => {
-    const p = storage.getProfile()
-    if (!p?.onboardingComplete) { router.replace('/'); return }
-    setProfile(p)
-    setHistory(storage.getCompatibility())
+    const supabase = getSupabaseBrowser()
+    supabase.auth.getUser().then(async ({ data: { user } }) => {
+      if (!user) { router.replace('/login'); return }
+      const [p, h] = await Promise.all([
+        getProfile(supabase, user.id),
+        getCompatibility(supabase, user.id),
+      ])
+      if (!p) { router.replace('/'); return }
+      setProfile(p)
+      setHistory(h)
+    })
   }, [router])
 
   async function generate() {
@@ -43,8 +51,13 @@ export default function CompatibilityPage() {
       const data = await res.json()
       if (data.error) throw new Error(data.error)
       setReport(data)
-      storage.addCompatibility(data)
-      setHistory(storage.getCompatibility())
+      // report saved server-side; refresh history from DB
+      const supabase = getSupabaseBrowser()
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user) {
+        const updated = await getCompatibility(supabase, user.id)
+        setHistory(updated)
+      }
       setView('report')
     } catch {
       setError(t.compatError)

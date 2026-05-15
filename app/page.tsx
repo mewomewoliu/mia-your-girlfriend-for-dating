@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { storage } from '@/lib/storage'
+import { getSupabaseBrowser } from '@/lib/supabase/browser'
+import { getProfile } from '@/lib/db'
 import { useLanguage } from '@/lib/language-context'
 import type { UserProfile, BirthData, Intentions } from '@/lib/types'
 
@@ -80,13 +81,16 @@ export default function OnboardingPage() {
   const [birth, setBirth] = useState<BirthData>({ date: '', time: '', city: '' })
   const [intentions, setIntentions] = useState<Intentions>({ wantInLove: '', repeatingPattern: '', feelingSafe: '' })
   const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
   const [profile, setProfile] = useState<UserProfile | null>(null)
   const [generatingError, setGeneratingError] = useState('')
 
   useEffect(() => {
-    const existing = storage.getProfile()
-    if (existing?.onboardingComplete) router.replace('/chat')
+    const supabase = getSupabaseBrowser()
+    supabase.auth.getUser().then(async ({ data: { user } }) => {
+      if (!user) { router.replace('/login'); return }
+      const existing = await getProfile(supabase, user.id)
+      if (existing?.onboardingComplete) router.replace('/chat')
+    })
   }, [router])
 
   async function generateChart() {
@@ -96,7 +100,7 @@ export default function OnboardingPage() {
       const res = await fetch('/api/chart', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ birthDate: birth.date, birthTime: birth.time, birthCity: birth.city, intentions, language: lang }),
+        body: JSON.stringify({ birthDate: birth.date, birthTime: birth.time, birthCity: birth.city, intentions, language: lang, name: name || undefined }),
       })
       if (!res.ok) throw new Error('Chart generation failed')
       const chart = await res.json()
@@ -110,7 +114,6 @@ export default function OnboardingPage() {
         language: lang,
       }
       setProfile(newProfile)
-      storage.setProfile(newProfile)
       setStep('chart')
     } catch {
       setGeneratingError(t.q3Error)
@@ -244,7 +247,6 @@ export default function OnboardingPage() {
                 </p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                   <input style={wInput} placeholder={t.namePlaceholder} value={name} onChange={(e) => setName(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && setStep('birth')} onFocus={faw} onBlur={baw} />
-                  <input type="email" style={wInput} placeholder={lang === 'zh' ? '你的邮箱是什么？' : "What's your email?"} value={email} onChange={(e) => setEmail(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && setStep('birth')} onFocus={faw} onBlur={baw} />
                 </div>
                 <button onClick={() => setStep('birth')} style={{ width: '100%', background: '#101010', border: 'none', borderRadius: 8, padding: '13px 14px', fontFamily: 'var(--font-body)', fontSize: 14, fontWeight: 500, color: '#fff', cursor: 'pointer', transition: 'opacity 160ms' }} onMouseEnter={(e) => { e.currentTarget.style.opacity = '0.80' }} onMouseLeave={(e) => { e.currentTarget.style.opacity = '1' }}>
                   {lang === 'zh' ? '下一步' : 'Next step'}

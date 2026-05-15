@@ -5,7 +5,8 @@ import { useRouter } from 'next/navigation'
 import { Background } from '@/components/Background'
 import { NavBar } from '@/components/NavBar'
 import { MiaLogo } from '@/components/MiaLogo'
-import { storage } from '@/lib/storage'
+import { getSupabaseBrowser } from '@/lib/supabase/browser'
+import { getProfile, getPortrait, deleteAccount } from '@/lib/db'
 import { useLanguage } from '@/lib/language-context'
 import type { UserProfile, PortraitData } from '@/lib/types'
 
@@ -15,17 +16,28 @@ export default function PortraitPage() {
   const [profile, setProfile] = useState<UserProfile | null>(null)
   const [portrait, setPortrait] = useState<PortraitData | null>(null)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [userId, setUserId] = useState<string | null>(null)
 
   useEffect(() => {
-    const p = storage.getProfile()
-    if (!p?.onboardingComplete) { router.replace('/'); return }
-    setProfile(p)
-    setPortrait(storage.getPortrait())
+    const supabase = getSupabaseBrowser()
+    supabase.auth.getUser().then(async ({ data: { user } }) => {
+      if (!user) { router.replace('/login'); return }
+      setUserId(user.id)
+      const [p, po] = await Promise.all([
+        getProfile(supabase, user.id),
+        getPortrait(supabase, user.id),
+      ])
+      if (!p) { router.replace('/'); return }
+      setProfile(p)
+      setPortrait(po)
+    })
   }, [router])
 
-  function handleDelete() {
-    storage.clearAll()
-    router.replace('/')
+  async function handleDelete() {
+    if (!userId) return
+    const supabase = getSupabaseBrowser()
+    await deleteAccount(supabase, userId)
+    router.replace('/login')
   }
 
   const card: React.CSSProperties = {

@@ -1,12 +1,18 @@
 import Anthropic from '@anthropic-ai/sdk'
 import { NextRequest, NextResponse } from 'next/server'
 import { deriveRawChart } from '@/lib/chart'
-import type { ChartData } from '@/lib/types'
+import { setProfile } from '@/lib/db'
+import { getSupabaseServer } from '@/lib/supabase/server'
+import type { ChartData, UserProfile } from '@/lib/types'
 
 export async function POST(req: NextRequest) {
+  const supabase = getSupabaseServer()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
   try {
     const client = new Anthropic()
-    const { birthDate, birthTime, birthCity, intentions, language } = await req.json()
+    const { birthDate, birthTime, birthCity, intentions, language, name } = await req.json()
     const lang: 'en' | 'zh' = language ?? 'en'
 
     const [year, month, day] = birthDate.split('-').map(Number)
@@ -61,10 +67,20 @@ Rules:
       summary: `your chart tells a story of someone who feels things deeply and loves with real intention. there's a lot of wisdom here — let's explore it together.`,
     }
 
+    const newProfile: UserProfile = {
+      name: name ?? undefined,
+      birth: { date: birthDate, time: birthTime || undefined, city: birthCity },
+      intentions,
+      chart: chartData,
+      onboardingComplete: true,
+      createdAt: new Date().toISOString(),
+      language: lang,
+    }
+    await setProfile(supabase, user.id, newProfile)
+
     return NextResponse.json(chartData)
   } catch (err) {
-    const msg = err instanceof Error ? err.message : String(err)
-    console.error('Chart API error:', msg)
-    return NextResponse.json({ error: 'Chart generation failed', debug: msg }, { status: 500 })
+    console.error('Chart API error:', err)
+    return NextResponse.json({ error: 'Chart generation failed' }, { status: 500 })
   }
 }

@@ -1,11 +1,16 @@
 import Anthropic from '@anthropic-ai/sdk'
-import { NextRequest } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { buildMiaSystemPrompt } from '@/lib/mia-prompt'
+import { getSupabaseServer } from '@/lib/supabase/server'
 import type { UserProfile, PortraitData } from '@/lib/types'
 
 export const maxDuration = 30
 
 export async function POST(req: NextRequest) {
+  const supabase = getSupabaseServer()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
   try {
     const client = new Anthropic()
     const { messages, profile, portrait, language } = (await req.json()) as {

@@ -1,7 +1,8 @@
 'use client'
 
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react'
-import { storage } from './storage'
+import { getSupabaseBrowser } from './supabase/browser'
+import { getProfile } from './db'
 import { translations, type Lang, type Translations } from './i18n'
 
 interface LanguageContextValue {
@@ -20,12 +21,18 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const [lang, setLangState] = useState<Lang>('en')
 
   useEffect(() => {
-    setLangState(storage.getLanguage())
+    const supabase = getSupabaseBrowser()
+    supabase.auth.getUser().then(async ({ data: { user } }) => {
+      if (!user) return
+      const profile = await getProfile(supabase, user.id)
+      if (profile?.language === 'zh' || profile?.language === 'en') {
+        setLangState(profile.language)
+      }
+    })
   }, [])
 
   function setLang(l: Lang) {
     setLangState(l)
-    storage.setLanguage(l)
   }
 
   return (

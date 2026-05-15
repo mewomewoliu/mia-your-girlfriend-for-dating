@@ -6,7 +6,8 @@ import { NavBar } from '@/components/NavBar'
 import { ChatBubble } from '@/components/ChatBubble'
 import { TypingIndicator } from '@/components/TypingIndicator'
 import { QuickReply } from '@/components/QuickReply'
-import { storage } from '@/lib/storage'
+import { getSupabaseBrowser } from '@/lib/supabase/browser'
+import { getProfile, getPortrait, getMessages, appendMessage } from '@/lib/db'
 import { useLanguage } from '@/lib/language-context'
 import type { Message, UserProfile, PortraitData, InsightCardData } from '@/lib/types'
 
@@ -25,6 +26,7 @@ export default function ChatPage() {
   const [profile, setProfile] = useState<UserProfile | null>(null)
   const [portrait, setPortrait] = useState<PortraitData | null>(null)
   const [messages, setMessages] = useState<Message[]>([])
+  const [userId, setUserId] = useState<string | null>(null)
   const [input, setInput] = useState('')
   const [isTyping, setIsTyping] = useState(false)
   const [showReplies, setShowReplies] = useState(false)
@@ -32,22 +34,26 @@ export default function ChatPage() {
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-    const p = storage.getProfile()
-    if (!p?.onboardingComplete) {
-      router.replace('/')
-      return
-    }
-    setProfile(p)
-    setPortrait(storage.getPortrait())
-
-    const saved = storage.getMessages()
-    const openingMessage: Message = {
-      id: 'opening',
-      role: 'assistant',
-      content: t.openingMsg,
-      timestamp: new Date().toISOString(),
-    }
-    setMessages(saved.length > 0 ? saved : [openingMessage])
+    const supabase = getSupabaseBrowser()
+    supabase.auth.getUser().then(async ({ data: { user } }) => {
+      if (!user) { router.replace('/login'); return }
+      setUserId(user.id)
+      const [p, po, saved] = await Promise.all([
+        getProfile(supabase, user.id),
+        getPortrait(supabase, user.id),
+        getMessages(supabase, user.id),
+      ])
+      if (!p) { router.replace('/'); return }
+      setProfile(p)
+      setPortrait(po)
+      const openingMessage: Message = {
+        id: 'opening',
+        role: 'assistant',
+        content: t.openingMsg,
+        timestamp: new Date().toISOString(),
+      }
+      setMessages(saved.length > 0 ? saved : [openingMessage])
+    })
   }, [router, t.openingMsg])
 
   useEffect(() => {
@@ -71,7 +77,7 @@ export default function ChatPage() {
 
     const nextMessages = [...messages, userMsg]
     setMessages(nextMessages)
-    storage.setMessages(nextMessages)
+    if (userId) appendMessage(getSupabaseBrowser(), userId, userMsg).catch(console.error)
     setIsTyping(true)
 
     const apiMessages = nextMessages.map((m) => ({ role: m.role, content: m.content }))
@@ -116,9 +122,9 @@ export default function ChatPage() {
       setMessages((prev) => {
         const updated = [...prev]
         updated[updated.length - 1] = finalMsg
-        storage.setMessages(updated)
         return updated
       })
+      if (userId) appendMessage(getSupabaseBrowser(), userId, finalMsg).catch(console.error)
     } catch {
       setIsTyping(false)
       const errMsg: Message = {
@@ -127,13 +133,9 @@ export default function ChatPage() {
         content: t.chatError,
         timestamp: new Date().toISOString(),
       }
-      setMessages((prev) => {
-        const updated = [...prev, errMsg]
-        storage.setMessages(updated)
-        return updated
-      })
+      setMessages((prev) => [...prev, errMsg])
     }
-  }, [messages, isTyping, profile, portrait, lang])
+  }, [messages, isTyping, profile, portrait, lang, userId])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()

@@ -2,9 +2,15 @@ import Anthropic from '@anthropic-ai/sdk'
 import { NextRequest, NextResponse } from 'next/server'
 import { buildCompatibilityPrompt } from '@/lib/mia-prompt'
 import { deriveRawChart } from '@/lib/chart'
+import { addCompatibility } from '@/lib/db'
+import { getSupabaseServer } from '@/lib/supabase/server'
 import type { UserProfile, CompatibilityReport } from '@/lib/types'
 
 export async function POST(req: NextRequest) {
+  const supabase = getSupabaseServer()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
   try {
     const client = new Anthropic()
     const { profile, partnerName, partnerBirthDate, partnerBirthTime, partnerBirthCity, language } =
@@ -69,6 +75,8 @@ export async function POST(req: NextRequest) {
         ],
       },
     }
+
+    await addCompatibility(supabase, user.id, report)
 
     return NextResponse.json(report)
   } catch (err) {
