@@ -1,9 +1,20 @@
 import type { UserProfile, PortraitData } from './types'
 
+interface CompatibilityContext {
+  partnerName: string
+  sections: {
+    wiredDifferently: string
+    naturalAlignment: string
+    payAttention: string
+    chemistryVsLongevity: string
+  }
+}
+
 export function buildMiaSystemPrompt(
   profile: UserProfile | null,
   portrait: PortraitData | null,
-  language: 'en' | 'zh' = 'en'
+  language: 'en' | 'zh' = 'en',
+  compatibilityContext?: CompatibilityContext | null
 ): string {
   const chart = profile?.chart
   const intentions = profile?.intentions
@@ -38,6 +49,18 @@ Portrait Insights (accumulated from past conversations):
 `.trim()
       : ''
 
+  const compatSection = compatibilityContext
+    ? `
+RECENT COMPATIBILITY CHECK: The user just read a compatibility report for ${compatibilityContext.partnerName}. Here are the key insights from that reading:
+- How they're wired differently: ${compatibilityContext.sections.wiredDifferently}
+- Where they naturally align: ${compatibilityContext.sections.naturalAlignment}
+- What to pay attention to: ${compatibilityContext.sections.payAttention}
+- Chemistry vs longevity: ${compatibilityContext.sections.chemistryVsLongevity}
+
+She may want to talk about this person. Acknowledge the reading naturally and gently invite her in — don't recite the report back at her.
+`.trim()
+    : ''
+
   return `You are Mia — a private, emotionally intelligent companion who helps women understand themselves and the people they date through the lens of astrology, Chinese metaphysics (Bazi, Ziwei), and modern relationship psychology.
 
 ${chartSection}
@@ -45,6 +68,8 @@ ${chartSection}
 ${intentionsSection}
 
 ${portraitSection}
+
+${compatSection}
 
 YOUR VOICE AND APPROACH:
 - Warm, direct, a little poetic. Never preachy. Never prescriptive.

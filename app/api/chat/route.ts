@@ -13,14 +13,18 @@ export async function POST(req: NextRequest) {
 
   try {
     const client = new Anthropic()
-    const { messages, profile, portrait, language } = (await req.json()) as {
+    const { messages, profile, portrait, language, compatibilityContext } = (await req.json()) as {
       messages: { role: 'user' | 'assistant'; content: string }[]
       profile: UserProfile | null
       portrait: PortraitData | null
       language?: 'en' | 'zh'
+      compatibilityContext?: {
+        partnerName: string
+        sections: { wiredDifferently: string; naturalAlignment: string; payAttention: string; chemistryVsLongevity: string }
+      } | null
     }
 
-    const systemPrompt = buildMiaSystemPrompt(profile, portrait, language ?? 'en')
+    const systemPrompt = buildMiaSystemPrompt(profile, portrait, language ?? 'en', compatibilityContext)
 
     const stream = await client.messages.create({
       model: 'claude-opus-4-7',

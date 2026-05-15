@@ -116,7 +116,7 @@ export default function CompatibilityPage() {
 
       {/* Tagline */}
       <div style={{ padding: 'max(16px, env(safe-area-inset-top)) 20px 12px', flexShrink: 0 }}>
-        <span style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: '#C8956C', letterSpacing: '0.01em', fontWeight: 400 }}>
+        <span style={{ fontFamily: 'var(--font-body)', fontSize: 'clamp(11px, 3.5vw, 13px)', color: '#C8956C', letterSpacing: '0.01em', fontWeight: 400 }}>
           {'{Mia: a girlfriend helps you date and love yourself }'}
         </span>
       </div>
@@ -131,7 +131,7 @@ export default function CompatibilityPage() {
 
               {/* Heading */}
               <div style={{ padding: '24px 24px 0' }}>
-                <p style={{ fontFamily: 'var(--font-display)', fontSize: 22, fontWeight: 700, color: '#101010', lineHeight: 1.3, letterSpacing: '-0.01em' }}>
+                <p style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(18px, 5.5vw, 22px)', fontWeight: 700, color: '#101010', lineHeight: 1.3, letterSpacing: '-0.01em' }}>
                   {t.compatFormTitle.split('\n').map((line, i, arr) => (
                     <span key={i}>{line}{i < arr.length - 1 && <br />}</span>
                   ))}
@@ -332,7 +332,20 @@ export default function CompatibilityPage() {
               {/* CTA */}
               <div style={{ padding: '24px' }}>
                 <button
-                  onClick={() => router.push('/chat')}
+                  onClick={() => {
+                    if (report) {
+                      sessionStorage.setItem('mia_compatibility_context', JSON.stringify({
+                        partnerName: report.partnerName,
+                        sections: {
+                          wiredDifferently: report.sections.wiredDifferently,
+                          naturalAlignment: report.sections.naturalAlignment,
+                          payAttention: report.sections.payAttention,
+                          chemistryVsLongevity: report.sections.chemistryVsLongevity,
+                        },
+                      }))
+                    }
+                    router.push('/chat')
+                  }}
                   style={{ width: '100%', background: '#101010', border: 'none', borderRadius: 12, padding: '15px 20px', color: '#fff', fontFamily: 'var(--font-body)', fontSize: 15, fontWeight: 600, cursor: 'pointer' }}
                 >
                   {t.talkToMia}

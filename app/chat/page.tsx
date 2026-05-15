@@ -31,11 +31,20 @@ export default function ChatPage() {
   const [input, setInput] = useState('')
   const [isTyping, setIsTyping] = useState(false)
   const [showReplies, setShowReplies] = useState(false)
+  const [compatibilityContext, setCompatibilityContext] = useState<{ partnerName: string; sections: { wiredDifferently: string; naturalAlignment: string; payAttention: string; chemistryVsLongevity: string } } | null>(null)
   const bottomRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const isMobile = useMobile()
 
   useEffect(() => {
+    const stored = sessionStorage.getItem('mia_compatibility_context')
+    let ctx: typeof compatibilityContext = null
+    if (stored) {
+      try { ctx = JSON.parse(stored) } catch { /* ignore */ }
+      sessionStorage.removeItem('mia_compatibility_context')
+      if (ctx) setCompatibilityContext(ctx)
+    }
+
     const supabase = getSupabaseBrowser()
     supabase.auth.getUser().then(async ({ data: { user } }) => {
       if (!user) { router.replace('/login'); return }
@@ -48,15 +57,21 @@ export default function ChatPage() {
       if (!p) { router.replace('/'); return }
       setProfile(p)
       setPortrait(po)
+      const openingContent = ctx
+        ? (lang === 'zh'
+            ? `i刚刚读了你和${ctx.partnerName}的相容性报告。你心里在想什么？`
+            : `i just read your compatibility with ${ctx.partnerName}. what's coming up for you?`)
+        : t.openingMsg
       const openingMessage: Message = {
         id: 'opening',
         role: 'assistant',
-        content: t.openingMsg,
+        content: openingContent,
         timestamp: new Date().toISOString(),
       }
       setMessages(saved.length > 0 ? saved : [openingMessage])
     })
-  }, [router, t.openingMsg])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router])
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -88,7 +103,7 @@ export default function ChatPage() {
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: apiMessages, profile, portrait, language: lang }),
+        body: JSON.stringify({ messages: apiMessages, profile, portrait, language: lang, compatibilityContext }),
       })
 
       if (!res.ok || !res.body) throw new Error('stream failed')
@@ -137,7 +152,7 @@ export default function ChatPage() {
       }
       setMessages((prev) => [...prev, errMsg])
     }
-  }, [messages, isTyping, profile, portrait, lang, userId])
+  }, [messages, isTyping, profile, portrait, lang, userId, compatibilityContext])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -156,7 +171,7 @@ export default function ChatPage() {
 
           {/* Golden tagline */}
           <div style={{ padding: 'max(16px, env(safe-area-inset-top)) 20px 12px', flexShrink: 0 }}>
-            <span style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: '#C8956C', letterSpacing: '0.01em', fontWeight: 400 }}>
+            <span style={{ fontFamily: 'var(--font-body)', fontSize: 'clamp(11px, 3.5vw, 13px)', color: '#C8956C', letterSpacing: '0.01em', fontWeight: 400 }}>
               {'{Mia: a girlfriend helps you date and love yourself }'}
             </span>
           </div>
@@ -171,22 +186,38 @@ export default function ChatPage() {
             display: 'flex',
             flexDirection: 'column',
             minHeight: 0,
+            position: 'relative',
           }}>
+            {/* Flower background */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/lily.png"
+              alt=""
+              aria-hidden="true"
+              style={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                width: '85%',
+                maxWidth: 320,
+                objectFit: 'contain',
+                opacity: 0.5,
+                pointerEvents: 'none',
+                userSelect: 'none',
+                zIndex: 0,
+              }}
+            />
+
             {/* Card header */}
-            <div style={{ padding: '16px 16px 0', flexShrink: 0 }}>
+            <div style={{ padding: '16px 16px 0', flexShrink: 0, position: 'relative', zIndex: 1 }}>
               <p style={{ fontFamily: 'var(--font-body)', fontSize: 20, fontWeight: 700, color: '#101010', letterSpacing: '-0.01em' }}>
                 Chat
               </p>
             </div>
 
-            {/* Decorative flower */}
-            <div style={{ display: 'flex', justifyContent: 'center', padding: '12px 0 8px', flexShrink: 0 }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/lily.png" alt="" style={{ width: '52%', maxWidth: 200, objectFit: 'contain', opacity: 0.72 }} />
-            </div>
-
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto" style={{ padding: '0 14px' }}>
+            <div className="flex-1 overflow-y-auto" style={{ padding: '12px 14px 0', position: 'relative', zIndex: 1 }}>
               <div className="flex flex-col gap-3">
                 {messages.map((msg) => (
                   <ChatBubble key={msg.id} message={msg} />
@@ -198,10 +229,12 @@ export default function ChatPage() {
 
             {/* Quick replies inside card */}
             {showReplies && !isTyping && (
-              <QuickReply
-                options={t.quickReplies as unknown as string[]}
-                onSelect={(opt) => sendMessage(opt)}
-              />
+              <div style={{ position: 'relative', zIndex: 1 }}>
+                <QuickReply
+                  options={t.quickReplies as unknown as string[]}
+                  onSelect={(opt) => sendMessage(opt)}
+                />
+              </div>
             )}
           </div>
 

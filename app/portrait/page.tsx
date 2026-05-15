@@ -82,7 +82,7 @@ export default function PortraitPage() {
 
       {/* Tagline */}
       <div style={{ padding: 'max(16px, env(safe-area-inset-top)) 20px 12px', flexShrink: 0 }}>
-        <span style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: '#C8956C', letterSpacing: '0.01em', fontWeight: 400 }}>
+        <span style={{ fontFamily: 'var(--font-body)', fontSize: 'clamp(11px, 3.5vw, 13px)', color: '#C8956C', letterSpacing: '0.01em', fontWeight: 400 }}>
           {'{Mia: a girlfriend helps you date and love yourself }'}
         </span>
       </div>
@@ -95,7 +95,7 @@ export default function PortraitPage() {
 
             {/* Header: name + galaxy */}
             <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12 }}>
-              <p style={{ fontFamily: 'var(--font-display)', fontSize: 22, fontWeight: 700, color: '#101010', lineHeight: 1.3, letterSpacing: '-0.01em', flex: 1 }}>
+              <p style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(16px, 5vw, 22px)', fontWeight: 700, color: '#101010', lineHeight: 1.3, letterSpacing: '-0.01em', flex: 1, minWidth: 0 }}>
                 {`{${displayName}}, ${lang === 'zh' ? '你的模式' : 'your pattern'}`}
               </p>
               <div style={{ flexShrink: 0, marginTop: 2 }}>
