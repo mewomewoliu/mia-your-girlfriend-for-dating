@@ -3,9 +3,11 @@ import { NextRequest } from 'next/server'
 import { buildMiaSystemPrompt } from '@/lib/mia-prompt'
 import type { UserProfile, PortraitData } from '@/lib/types'
 
+export const maxDuration = 30
+
 export async function POST(req: NextRequest) {
-  const client = new Anthropic()
   try {
+    const client = new Anthropic()
     const { messages, profile, portrait, language } = (await req.json()) as {
       messages: { role: 'user' | 'assistant'; content: string }[]
       profile: UserProfile | null
