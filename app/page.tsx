@@ -98,6 +98,7 @@ export default function OnboardingPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ birthDate: birth.date, birthTime: birth.time, birthCity: birth.city, intentions, language: lang }),
       })
+      if (!res.ok) throw new Error('Chart generation failed')
       const chart = await res.json()
       const newProfile: UserProfile = {
         name: name || undefined,

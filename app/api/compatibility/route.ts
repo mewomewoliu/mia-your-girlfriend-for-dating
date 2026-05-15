@@ -5,8 +5,8 @@ import { deriveRawChart } from '@/lib/chart'
 import type { UserProfile, CompatibilityReport } from '@/lib/types'
 
 export async function POST(req: NextRequest) {
-  const client = new Anthropic()
   try {
+    const client = new Anthropic()
     const { profile, partnerName, partnerBirthDate, partnerBirthTime, partnerBirthCity, language } =
       (await req.json()) as {
         profile: UserProfile

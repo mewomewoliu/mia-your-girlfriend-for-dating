@@ -4,8 +4,8 @@ import { deriveRawChart } from '@/lib/chart'
 import type { ChartData } from '@/lib/types'
 
 export async function POST(req: NextRequest) {
-  const client = new Anthropic()
   try {
+    const client = new Anthropic()
     const { birthDate, birthTime, birthCity, intentions, language } = await req.json()
     const lang: 'en' | 'zh' = language ?? 'en'
 
