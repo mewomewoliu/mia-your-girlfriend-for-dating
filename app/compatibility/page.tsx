@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { Background } from '@/components/Background'
 import { NavBar } from '@/components/NavBar'
 import { getSupabaseBrowser } from '@/lib/supabase/browser'
 import { getProfile, getCompatibility } from '@/lib/db'
@@ -41,7 +40,7 @@ export default function CompatibilityPage() {
   }, [router])
 
   async function generate() {
-    if (!partnerName || !partnerBirthDate || !profile) return
+    if (!partnerBirthDate || !profile) return
     setView('generating')
     setError('')
     try {
@@ -53,7 +52,6 @@ export default function CompatibilityPage() {
       const data = await res.json()
       if (data.error) throw new Error(data.error)
       setReport(data)
-      // report saved server-side; refresh history from DB
       const supabase = getSupabaseBrowser()
       const { data: { user } } = await supabase.auth.getUser()
       if (user) {
@@ -67,290 +65,285 @@ export default function CompatibilityPage() {
     }
   }
 
-  const card: React.CSSProperties = {
-    background: 'var(--card-bg)',
-    border: '0.5px solid var(--card-border)',
-    borderRadius: isMobile ? 20 : 16,
-    boxShadow: 'var(--card-shadow)',
-  }
+  if (!profile) return null
+
+  const canGenerate = !!partnerBirthDate
 
   const fieldInput: React.CSSProperties = {
     width: '100%',
-    background: '#fff',
-    border: '1px solid rgba(0,0,0,0.12)',
-    borderRadius: 8,
-    padding: '12px 14px',
+    background: 'rgba(255,255,255,0.55)',
+    border: '1.5px solid #C8956C',
+    borderRadius: 12,
+    padding: '14px 16px',
     color: '#101010',
     fontFamily: 'var(--font-body)',
-    fontSize: 14,
+    fontSize: 15,
     outline: 'none',
     textAlign: 'center',
-    transition: 'border-color 200ms',
+    transition: 'border-color 200ms, background 200ms',
   }
 
   const fieldLabel: React.CSSProperties = {
     fontFamily: 'var(--font-body)',
-    fontSize: 10,
-    color: 'rgba(0,0,0,0.55)',
-    letterSpacing: '0.06em',
-    textTransform: 'uppercase',
+    fontSize: 12,
+    color: 'rgba(16,16,16,0.60)',
     display: 'block',
-    marginBottom: 6,
+    marginBottom: 7,
+    fontWeight: 400,
   }
 
   const goldLabel: React.CSSProperties = {
     fontFamily: 'var(--font-body)',
     fontSize: 9.5,
-    fontWeight: 500,
+    fontWeight: 600,
     textTransform: 'uppercase',
-    letterSpacing: '1.1px',
-    color: 'var(--gold)',
+    letterSpacing: '1px',
+    color: '#C8956C',
     marginBottom: 10,
   }
 
-  const focusGold = (e: React.FocusEvent<HTMLInputElement>) => {
-    e.target.style.borderColor = 'rgba(0,0,0,0.35)'
+  const onFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    e.target.style.borderColor = 'rgba(200,149,108,0.90)'
+    e.target.style.background = '#fff'
   }
-  const blurGold = (e: React.FocusEvent<HTMLInputElement>) => {
-    e.target.style.borderColor = 'rgba(0,0,0,0.12)'
+  const onBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    e.target.style.borderColor = '#C8956C'
+    e.target.style.background = 'rgba(255,255,255,0.55)'
   }
-
-  if (!profile) return null
 
   return (
-    <>
-      <Background />
-      <div className="flex flex-col min-h-dvh" style={{ paddingTop: isMobile ? 0 : 'env(safe-area-inset-top)', paddingBottom: 80 }}>
-        {/* Header */}
-        {isMobile ? (
-          <div style={{ padding: 'max(16px, env(safe-area-inset-top)) 20px 12px', flexShrink: 0 }}>
-            <span style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: '#C8956C', letterSpacing: '0.01em', fontWeight: 400 }}>
-              {'{Mia: a girlfriend helps you date and love yourself }'}
-            </span>
-          </div>
-        ) : (
-          <div style={{
-            background: 'rgba(18,17,16,0.97)',
-            backdropFilter: 'blur(20px)',
-            borderBottom: '1px solid rgba(255,255,255,0.08)',
-            padding: '0 20px',
-            height: 56,
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            flexShrink: 0,
-          }}>
-            <p style={{ fontFamily: 'var(--font-body)', fontSize: 14, fontWeight: 600, color: 'rgba(255,255,255,0.90)', letterSpacing: '-0.01em' }}>
-              {t.compatTitle}
-            </p>
-            <p style={{ fontFamily: 'var(--font-body)', fontSize: 11, color: 'rgba(255,255,255,0.35)', marginTop: 2 }}>
-              {t.compatSub}
-            </p>
-          </div>
-        )}
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100dvh', background: '#1a1a1a', paddingBottom: 80 }}>
 
-        <div className="flex-1 overflow-y-auto px-4 py-5 max-w-lg mx-auto w-full">
+      {/* Tagline */}
+      <div style={{ padding: 'max(16px, env(safe-area-inset-top)) 20px 12px', flexShrink: 0 }}>
+        <span style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: '#C8956C', letterSpacing: '0.01em', fontWeight: 400 }}>
+          {'{Mia: a girlfriend helps you date and love yourself }'}
+        </span>
+      </div>
 
+      {/* Content */}
+      <div style={{ flex: 1, overflowY: 'auto', padding: '0 12px 20px' }}>
+        <div style={{ maxWidth: 480, margin: '0 auto' }}>
+
+          {/* ── FORM ─────────────────────────────── */}
           {view === 'form' && (
-            <div className="flex flex-col gap-5 animate-fade-in">
-              <p style={{ fontFamily: 'var(--font-body)', fontSize: 'clamp(18px, 2vw, 22px)', fontWeight: 700, color: 'rgba(245,239,232,0.92)', letterSpacing: '-0.02em', lineHeight: 1.3 }}>
-                {t.compatFormTitle.split('\n').map((line, i, arr) => (
-                  <span key={i}>{line}{i < arr.length - 1 && <br />}</span>
-                ))}
-              </p>
+            <div style={{ background: '#F0EDEA', borderRadius: 24, overflow: 'hidden' }} className="animate-fade-in">
 
-              <div style={{ background: '#fff', borderRadius: isMobile ? 20 : 12, padding: 'var(--card-pad-sm)' }}>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-                  <div>
-                    <label style={fieldLabel}>{t.theirName}</label>
-                    <input style={fieldInput} placeholder={t.nameSuffix} value={partnerName}
-                      onChange={(e) => setPartnerName(e.target.value)}
-                      onFocus={focusGold} onBlur={blurGold} />
-                  </div>
-                  <div>
-                    <label style={fieldLabel}>{t.birthDate}</label>
-                    <input
-                      type={isMobile ? 'text' : 'date'}
-                      style={fieldInput}
-                      value={partnerBirthDate}
-                      placeholder={isMobile ? (lang === 'zh' ? '例如 1995年1月15日' : 'e.g. Jan 15 1995') : undefined}
-                      onChange={(e) => setPartnerBirthDate(e.target.value)}
-                      onFocus={focusGold} onBlur={blurGold}
-                    />
-                  </div>
-                  <div>
-                    <label style={fieldLabel}>
-                      {t.birthTime} <span style={{ opacity: 0.5, fontStyle: 'italic' }}>{t.birthTimeOptionalLabel}</span>
-                    </label>
-                    <input
-                      type={isMobile ? 'text' : 'time'}
-                      style={fieldInput}
-                      value={partnerBirthTime}
-                      placeholder={isMobile ? (lang === 'zh' ? '例如 15:30（可选）' : 'e.g. 3:30 pm (optional)') : undefined}
-                      onChange={(e) => setPartnerBirthTime(e.target.value)}
-                      onFocus={focusGold} onBlur={blurGold}
-                    />
-                  </div>
-                  <div>
-                    <label style={fieldLabel}>
-                      {t.birthCityOptionalLabel} <span style={{ opacity: 0.5, fontStyle: 'italic' }}>{t.birthTimeOptionalLabel}</span>
-                    </label>
-                    <input style={fieldInput} placeholder={t.cityPlaceholder} value={partnerBirthCity}
-                      onChange={(e) => setPartnerBirthCity(e.target.value)}
-                      onFocus={focusGold} onBlur={blurGold} />
-                  </div>
-                </div>
+              {/* Heading */}
+              <div style={{ padding: '24px 24px 0' }}>
+                <p style={{ fontFamily: 'var(--font-display)', fontSize: 22, fontWeight: 700, color: '#101010', lineHeight: 1.3, letterSpacing: '-0.01em' }}>
+                  {t.compatFormTitle.split('\n').map((line, i, arr) => (
+                    <span key={i}>{line}{i < arr.length - 1 && <br />}</span>
+                  ))}
+                </p>
               </div>
 
-              {error && (
-                <p style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'rgba(245,239,232,0.40)', textAlign: 'center' }}>
-                  {error}
-                </p>
-              )}
+              {/* Flower */}
+              <div style={{ display: 'flex', justifyContent: 'center', padding: '20px 24px 16px' }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/lily.png" alt="" style={{ width: '66%', maxWidth: 240, objectFit: 'contain', opacity: 0.85 }} />
+              </div>
 
-              <button
-                onClick={generate}
-                disabled={!partnerName || !partnerBirthDate}
-                style={{
-                  background: isMobile
-                    ? (partnerName && partnerBirthDate ? '#C8956C' : 'rgba(200,149,108,0.35)')
-                    : 'var(--btn)',
-                  border: 'none',
-                  borderRadius: isMobile ? 14 : 50,
-                  padding: '13px 28px',
-                  color: '#fff',
-                  fontFamily: 'var(--font-body)',
-                  fontSize: 14,
-                  fontWeight: 500,
-                  cursor: partnerName && partnerBirthDate ? 'pointer' : 'not-allowed',
-                  opacity: isMobile ? 1 : (partnerName && partnerBirthDate ? 1 : 0.38),
-                  alignSelf: 'stretch',
-                  transition: 'background 150ms',
-                }}
-              >
-                {t.generateReading}
-              </button>
+              {/* Fields */}
+              <div style={{ padding: '0 24px 24px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+                <div>
+                  <label style={fieldLabel}>{t.theirName}</label>
+                  <input
+                    style={fieldInput}
+                    placeholder={t.nameSuffix ?? (lang === 'zh' ? '他/她的名字' : 'Their name')}
+                    value={partnerName}
+                    onChange={(e) => setPartnerName(e.target.value)}
+                    onFocus={onFocus} onBlur={onBlur}
+                  />
+                </div>
+                <div>
+                  <label style={fieldLabel}>{t.birthDate}</label>
+                  <input
+                    type={isMobile ? 'text' : 'date'}
+                    style={fieldInput}
+                    placeholder="YYYY-MM-DD"
+                    value={partnerBirthDate}
+                    onChange={(e) => setPartnerBirthDate(e.target.value)}
+                    onFocus={onFocus} onBlur={onBlur}
+                  />
+                </div>
+                <div>
+                  <label style={fieldLabel}>
+                    {t.birthTime}{' '}
+                    <span style={{ opacity: 0.55, fontStyle: 'italic' }}>{t.birthTimeOptionalLabel}</span>
+                  </label>
+                  <input
+                    type={isMobile ? 'text' : 'time'}
+                    style={fieldInput}
+                    placeholder="HH-MM"
+                    value={partnerBirthTime}
+                    onChange={(e) => setPartnerBirthTime(e.target.value)}
+                    onFocus={onFocus} onBlur={onBlur}
+                  />
+                </div>
+                <div>
+                  <label style={fieldLabel}>
+                    {t.birthCityOptionalLabel}{' '}
+                    <span style={{ opacity: 0.55, fontStyle: 'italic' }}>{t.birthTimeOptionalLabel}</span>
+                  </label>
+                  <input
+                    style={fieldInput}
+                    placeholder={lang === 'zh' ? '例如 北京，中国' : 'e.g. Stockholm, Sweden'}
+                    value={partnerBirthCity}
+                    onChange={(e) => setPartnerBirthCity(e.target.value)}
+                    onFocus={onFocus} onBlur={onBlur}
+                  />
+                </div>
 
+                {error && (
+                  <p style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'rgba(200,149,108,0.80)', textAlign: 'center' }}>
+                    {error}
+                  </p>
+                )}
+
+                <button
+                  onClick={generate}
+                  disabled={!canGenerate}
+                  style={{
+                    width: '100%',
+                    background: canGenerate ? '#101010' : 'rgba(16,16,16,0.22)',
+                    border: 'none',
+                    borderRadius: 12,
+                    padding: '15px 20px',
+                    color: canGenerate ? '#fff' : 'rgba(16,16,16,0.35)',
+                    fontFamily: 'var(--font-body)',
+                    fontSize: 15,
+                    fontWeight: 600,
+                    cursor: canGenerate ? 'pointer' : 'not-allowed',
+                    transition: 'background 150ms',
+                    marginTop: 4,
+                  }}
+                >
+                  {lang === 'zh' ? '读取TA的星盘' : 'Read their chart'}
+                </button>
+              </div>
+
+              {/* Past readings */}
               {history.length > 0 && (
-                <div className="flex flex-col gap-3 mt-2">
-                  <p style={{ fontFamily: 'var(--font-body)', fontSize: 10, color: 'rgba(245,239,232,0.55)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>{t.pastReadings}</p>
-                  {history.map((r, i) => (
-                    <button
-                      key={i}
-                      onClick={() => { setReport(r); setView('report') }}
-                      style={{
-                        ...card,
-                        padding: '12px 16px',
-                        textAlign: 'left',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        width: '100%',
-                        border: '0.5px solid var(--card-border)',
-                      }}
-                    >
-                      <span style={{ fontFamily: 'var(--font-body)', fontSize: 14, color: 'var(--text-card)' }}>{r.partnerName}</span>
-                      <span style={{ fontFamily: 'var(--font-body)', fontSize: 11, color: 'var(--text-card-muted)' }}>
-                        {new Date(r.generatedAt).toLocaleDateString([], { month: 'short', day: 'numeric' })}
-                      </span>
-                    </button>
-                  ))}
+                <div style={{ borderTop: '1px solid rgba(200,149,108,0.20)', padding: '20px 24px' }}>
+                  <p style={{ fontFamily: 'var(--font-body)', fontSize: 10, color: 'rgba(16,16,16,0.40)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 12 }}>
+                    {t.pastReadings}
+                  </p>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                    {history.map((r, i) => (
+                      <button
+                        key={i}
+                        onClick={() => { setReport(r); setView('report') }}
+                        style={{
+                          background: 'rgba(255,255,255,0.55)',
+                          border: '1px solid rgba(200,149,108,0.28)',
+                          borderRadius: 12,
+                          padding: '12px 16px',
+                          textAlign: 'left',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          width: '100%',
+                        }}
+                      >
+                        <span style={{ fontFamily: 'var(--font-body)', fontSize: 14, color: '#101010', fontWeight: 500 }}>
+                          {r.partnerName || (lang === 'zh' ? '未命名' : 'Unnamed')}
+                        </span>
+                        <span style={{ fontFamily: 'var(--font-body)', fontSize: 11, color: 'rgba(16,16,16,0.40)' }}>
+                          {new Date(r.generatedAt).toLocaleDateString([], { month: 'short', day: 'numeric' })}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
           )}
 
+          {/* ── GENERATING ───────────────────────── */}
           {view === 'generating' && (
             <div className="flex flex-col items-center justify-center gap-6 animate-fade-in" style={{ minHeight: '60vh' }}>
               <div style={{ position: 'relative', width: 80, height: 80, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <div style={{
-                  position: 'absolute', inset: 0, borderRadius: '50%',
-                  border: '0.5px solid rgba(200,149,108,0.45)',
-                  animation: 'pulse-ring 2.4s ease-in-out infinite',
-                }} />
+                <div style={{ position: 'absolute', inset: 0, borderRadius: '50%', border: '0.5px solid rgba(200,149,108,0.45)', animation: 'pulse-ring 2.4s ease-in-out infinite' }} />
                 <div style={{ width: 52, height: 52, borderRadius: '50%', border: '0.5px solid rgba(200,149,108,0.28)' }} />
-                <div style={{ position: 'absolute', width: 6, height: 6, borderRadius: '50%', background: 'var(--gold)' }} />
+                <div style={{ position: 'absolute', width: 6, height: 6, borderRadius: '50%', background: '#C8956C' }} />
               </div>
               <p style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 22, color: 'rgba(245,239,232,0.90)', textAlign: 'center' }}>
                 {t.generatingReading}
               </p>
               <div className="flex gap-2">
                 {[0, 1, 2].map((i) => (
-                  <span key={i} style={{
-                    width: 6, height: 6, borderRadius: '50%', background: 'var(--gold)', display: 'block',
-                    animation: `typing 1.4s ease-in-out infinite`, animationDelay: `${i * 0.22}s`,
-                  }} />
+                  <span key={i} style={{ width: 6, height: 6, borderRadius: '50%', background: '#C8956C', display: 'block', animation: 'typing 1.4s ease-in-out infinite', animationDelay: `${i * 0.22}s` }} />
                 ))}
               </div>
             </div>
           )}
 
+          {/* ── REPORT ───────────────────────────── */}
           {view === 'report' && report && (
-            <div className="flex flex-col gap-5 animate-fade-in">
-              <div>
+            <div style={{ background: '#F0EDEA', borderRadius: 24, overflow: 'hidden' }} className="animate-fade-in">
+
+              {/* Back + title */}
+              <div style={{ padding: '24px 24px 20px' }}>
                 <button
                   onClick={() => setView('form')}
-                  style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: 'rgba(245,239,232,0.35)', background: 'none', border: 'none', cursor: 'pointer', marginBottom: 12 }}
+                  style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: 'rgba(16,16,16,0.38)', background: 'none', border: 'none', cursor: 'pointer', marginBottom: 14, padding: 0 }}
                 >
                   {t.backBtn}
                 </button>
-                <p style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 26, color: 'rgba(245,239,232,0.92)', lineHeight: 1.3 }}>
-                  {t.youAnd(report.partnerName)}
+                <p style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 26, color: '#101010', lineHeight: 1.3, letterSpacing: '-0.01em' }}>
+                  {t.youAnd(report.partnerName || (lang === 'zh' ? 'TA' : 'them'))}
                 </p>
               </div>
 
-              {[
-                { title: t.sectionWired, content: report.sections.wiredDifferently },
-                { title: t.sectionAlign, content: report.sections.naturalAlignment },
-                { title: t.sectionAttention, content: report.sections.payAttention },
-                { title: t.sectionChemistry, content: report.sections.chemistryVsLongevity },
-              ].map(({ title, content }) => (
-                <div key={title} style={{ ...card, padding: 'var(--card-pad-sm)' }}>
-                  <p style={goldLabel}>{title}</p>
-                  <p style={{ fontFamily: 'var(--font-body)', fontSize: 14, fontWeight: 300, color: 'var(--text-card-secondary)', lineHeight: 1.7 }}>
-                    {content}
-                  </p>
-                </div>
-              ))}
+              {/* Report sections */}
+              <div style={{ padding: '0 24px', display: 'flex', flexDirection: 'column', gap: 14 }}>
+                {[
+                  { title: t.sectionWired, content: report.sections.wiredDifferently },
+                  { title: t.sectionAlign, content: report.sections.naturalAlignment },
+                  { title: t.sectionAttention, content: report.sections.payAttention },
+                  { title: t.sectionChemistry, content: report.sections.chemistryVsLongevity },
+                ].map(({ title, content }) => (
+                  <div key={title} style={{ background: '#E8E5E1', borderRadius: 16, padding: '16px' }}>
+                    <p style={goldLabel}>{title}</p>
+                    <p style={{ fontFamily: 'var(--font-body)', fontSize: 14, fontWeight: 300, color: '#C8956C', lineHeight: 1.7 }}>
+                      {content}
+                    </p>
+                  </div>
+                ))}
 
-              {/* Questions */}
-              <div style={{ ...card, padding: 'var(--card-pad-sm)', border: '0.5px solid rgba(200,149,108,0.25)' }}>
-                <p style={goldLabel}>{t.questionsTitle}</p>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                  {report.sections.questionsToExplore.map((q, i) => (
-                    <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
-                      <span style={{ color: 'var(--gold)', fontSize: 11, marginTop: 4, flexShrink: 0 }}>✦</span>
-                      <p style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 15, color: 'var(--text-card-secondary)', lineHeight: 1.5 }}>
-                        {q}
-                      </p>
-                    </div>
-                  ))}
+                {/* Questions */}
+                <div style={{ background: '#E8E5E1', borderRadius: 16, padding: '16px' }}>
+                  <p style={goldLabel}>{t.questionsTitle}</p>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                    {report.sections.questionsToExplore.map((q, i) => (
+                      <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
+                        <span style={{ color: '#C8956C', fontSize: 10, marginTop: 4, flexShrink: 0 }}>✦</span>
+                        <p style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 14, color: '#C8956C', lineHeight: 1.5 }}>
+                          {q}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
 
-              <button
-                onClick={() => router.push('/chat')}
-                style={{
-                  background: isMobile ? '#C8956C' : 'var(--btn)',
-                  border: 'none',
-                  borderRadius: isMobile ? 14 : 50,
-                  padding: '13px 24px',
-                  color: '#fff',
-                  fontFamily: 'var(--font-body)',
-                  fontSize: 14,
-                  fontWeight: 500,
-                  cursor: 'pointer',
-                  textAlign: 'center',
-                }}
-              >
-                {t.talkToMia}
-              </button>
+              {/* CTA */}
+              <div style={{ padding: '24px' }}>
+                <button
+                  onClick={() => router.push('/chat')}
+                  style={{ width: '100%', background: '#101010', border: 'none', borderRadius: 12, padding: '15px 20px', color: '#fff', fontFamily: 'var(--font-body)', fontSize: 15, fontWeight: 600, cursor: 'pointer' }}
+                >
+                  {t.talkToMia}
+                </button>
+              </div>
             </div>
           )}
+
         </div>
       </div>
       <NavBar />
-    </>
+    </div>
   )
 }

@@ -2,19 +2,44 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { Background } from '@/components/Background'
 import { NavBar } from '@/components/NavBar'
-import { MiaLogo } from '@/components/MiaLogo'
 import { getSupabaseBrowser } from '@/lib/supabase/browser'
 import { getProfile, getPortrait, deleteAccount } from '@/lib/db'
 import { useLanguage } from '@/lib/language-context'
-import { useMobile } from '@/lib/hooks'
 import type { UserProfile, PortraitData } from '@/lib/types'
+
+function GalaxySketch() {
+  return (
+    <svg width="88" height="66" viewBox="0 0 130 95" fill="none">
+      <ellipse cx="65" cy="47" rx="62" ry="26" transform="rotate(-18 65 47)" stroke="rgba(0,0,0,0.07)" strokeWidth="0.5"/>
+      <ellipse cx="65" cy="47" rx="52" ry="21" transform="rotate(-16 65 47)" stroke="rgba(0,0,0,0.10)" strokeWidth="0.6"/>
+      <ellipse cx="65" cy="47" rx="42" ry="17" transform="rotate(-14 65 47)" stroke="rgba(0,0,0,0.13)" strokeWidth="0.7"/>
+      <ellipse cx="65" cy="47" rx="32" ry="13" transform="rotate(-12 65 47)" stroke="rgba(0,0,0,0.17)" strokeWidth="0.9"/>
+      <ellipse cx="65" cy="47" rx="22" ry="9" transform="rotate(-10 65 47)" stroke="rgba(0,0,0,0.21)" strokeWidth="1"/>
+      <ellipse cx="65" cy="47" rx="13" ry="5" transform="rotate(-6 65 47)" stroke="rgba(0,0,0,0.27)" strokeWidth="1.2"/>
+      <ellipse cx="65" cy="47" rx="6" ry="2.5" transform="rotate(-3 65 47)" stroke="rgba(0,0,0,0.36)" strokeWidth="1.4"/>
+      <circle cx="8" cy="47" r="0.7" fill="rgba(0,0,0,0.13)"/>
+      <circle cx="122" cy="47" r="0.7" fill="rgba(0,0,0,0.13)"/>
+      <circle cx="18" cy="34" r="0.5" fill="rgba(0,0,0,0.10)"/>
+      <circle cx="112" cy="60" r="0.5" fill="rgba(0,0,0,0.10)"/>
+      <circle cx="22" cy="61" r="0.6" fill="rgba(0,0,0,0.12)"/>
+      <circle cx="108" cy="34" r="0.6" fill="rgba(0,0,0,0.12)"/>
+      <circle cx="34" cy="29" r="0.7" fill="rgba(0,0,0,0.16)"/>
+      <circle cx="96" cy="65" r="0.7" fill="rgba(0,0,0,0.16)"/>
+      <circle cx="27" cy="53" r="0.8" fill="rgba(0,0,0,0.18)"/>
+      <circle cx="103" cy="41" r="0.8" fill="rgba(0,0,0,0.18)"/>
+      <circle cx="48" cy="35" r="1.0" fill="rgba(0,0,0,0.26)"/>
+      <circle cx="82" cy="59" r="1.0" fill="rgba(0,0,0,0.26)"/>
+      <circle cx="65" cy="47" r="4.5" fill="rgba(0,0,0,0.38)"/>
+      <circle cx="65" cy="47" r="2.2" fill="rgba(0,0,0,0.55)"/>
+      <circle cx="65" cy="47" r="0.9" fill="rgba(0,0,0,0.75)"/>
+    </svg>
+  )
+}
 
 export default function PortraitPage() {
   const router = useRouter()
-  const { t } = useLanguage()
-  const isMobile = useMobile()
+  const { lang, t } = useLanguage()
   const [profile, setProfile] = useState<UserProfile | null>(null)
   const [portrait, setPortrait] = useState<PortraitData | null>(null)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
@@ -42,105 +67,78 @@ export default function PortraitPage() {
     router.replace('/login')
   }
 
-  const card: React.CSSProperties = {
-    background: 'var(--card-bg)',
-    border: '0.5px solid var(--card-border)',
-    borderRadius: isMobile ? 20 : 16,
-    boxShadow: 'var(--card-shadow)',
-    padding: 'var(--card-pad-sm)',
-  }
-
-  const goldLabel: React.CSSProperties = {
-    fontFamily: 'var(--font-body)',
-    fontSize: 9.5,
-    fontWeight: 500,
-    textTransform: 'uppercase',
-    letterSpacing: '1.1px',
-    color: 'var(--gold)',
-    marginBottom: 14,
-  }
-
   if (!profile) return null
 
+  const innerBox: React.CSSProperties = {
+    background: '#E8E5E1',
+    borderRadius: 16,
+    padding: '16px',
+  }
+
+  const displayName = profile.name || (lang === 'zh' ? '你' : 'You')
+
   return (
-    <>
-      <Background />
-      <div className="flex flex-col min-h-dvh" style={{ paddingTop: isMobile ? 0 : 'env(safe-area-inset-top)', paddingBottom: 80 }}>
-        {/* Header */}
-        {isMobile ? (
-          <div style={{ padding: 'max(16px, env(safe-area-inset-top)) 20px 12px', flexShrink: 0 }}>
-            <span style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: '#C8956C', letterSpacing: '0.01em', fontWeight: 400 }}>
-              {'{Mia: a girlfriend helps you date and love yourself }'}
-            </span>
-          </div>
-        ) : (
-          <div style={{
-            background: 'rgba(18,17,16,0.97)',
-            backdropFilter: 'blur(20px)',
-            borderBottom: '1px solid rgba(255,255,255,0.08)',
-            padding: '0 20px',
-            height: 56,
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            flexShrink: 0,
-          }}>
-            <p style={{ fontFamily: 'var(--font-body)', fontSize: 14, fontWeight: 600, color: 'rgba(255,255,255,0.90)', letterSpacing: '-0.01em' }}>
-              {t.portraitTitle}
-            </p>
-            <p style={{ fontFamily: 'var(--font-body)', fontSize: 11, color: 'rgba(255,255,255,0.35)', marginTop: 2 }}>
-              {t.portraitSub}
-            </p>
-          </div>
-        )}
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100dvh', background: '#1a1a1a', paddingBottom: 80 }}>
 
-        <div className="flex-1 overflow-y-auto px-4 py-5 max-w-lg mx-auto w-full">
-          <div className="flex flex-col gap-5 animate-fade-in">
+      {/* Tagline */}
+      <div style={{ padding: 'max(16px, env(safe-area-inset-top)) 20px 12px', flexShrink: 0 }}>
+        <span style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: '#C8956C', letterSpacing: '0.01em', fontWeight: 400 }}>
+          {'{Mia: a girlfriend helps you date and love yourself }'}
+        </span>
+      </div>
 
-            {/* Chart summary */}
+      {/* Scrollable content */}
+      <div style={{ flex: 1, overflowY: 'auto', padding: '0 12px 20px' }}>
+        <div style={{ maxWidth: 480, margin: '0 auto' }}>
+
+          <div style={{ background: '#F0EDEA', borderRadius: 24, padding: '24px', display: 'flex', flexDirection: 'column', gap: 20 }} className="animate-fade-in">
+
+            {/* Header: name + galaxy */}
+            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12 }}>
+              <p style={{ fontFamily: 'var(--font-display)', fontSize: 22, fontWeight: 700, color: '#101010', lineHeight: 1.3, letterSpacing: '-0.01em', flex: 1 }}>
+                {`{${displayName}}, ${lang === 'zh' ? '你的模式' : 'your pattern'}`}
+              </p>
+              <div style={{ flexShrink: 0, marginTop: 2 }}>
+                <GalaxySketch />
+              </div>
+            </div>
+
+            {/* Chart section */}
             {profile.chart && (
-              <div style={card}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
-                  <MiaLogo size={22} />
-                  <p style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 17, color: 'var(--text-card)' }}>
-                    {t.yourChart}
-                  </p>
-                </div>
-                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 14 }}>
+              <div style={innerBox}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 5, marginBottom: 14 }}>
                   {[
-                    { l: t.labelElement, v: profile.chart.dominantElement },
-                    { l: t.labelSunShort, v: profile.chart.sunSign },
-                    { l: t.labelZodiac, v: profile.chart.chineseZodiac },
-                  ].map(({ l, v }) => (
-                    <div key={l} style={{
-                      background: '#1A1714',
-                      border: '1px solid rgba(200,149,108,0.28)',
-                      borderRadius: 8,
-                      padding: '4px 10px',
-                    }}>
-                      <p style={{ fontSize: 8.5, color: 'rgba(200,149,108,0.58)', letterSpacing: '1px', textTransform: 'uppercase', fontFamily: 'var(--font-body)', fontWeight: 600 }}>{l}</p>
-                      <p style={{ fontSize: 12, color: 'rgba(245,239,232,0.88)', fontFamily: 'var(--font-body)' }}>{v}</p>
-                    </div>
+                    { label: t.labelElement, value: profile.chart.dominantElement },
+                    { label: t.labelSunShort, value: profile.chart.sunSign },
+                    { label: t.labelZodiac, value: profile.chart.chineseZodiac },
+                  ].map(({ label, value }) => (
+                    <p key={label} style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: '#101010', lineHeight: 1.4 }}>
+                      <span style={{ color: 'rgba(16,16,16,0.45)' }}>// {label} |{'  '}</span>
+                      <span style={{ color: '#C8956C', fontWeight: 600 }}>{value}</span>
+                    </p>
                   ))}
                 </div>
-                <p style={{ fontFamily: 'var(--font-body)', fontSize: 13, fontWeight: 300, color: 'var(--text-card-secondary)', lineHeight: 1.65 }}>
+                <div style={{ borderTop: '1px dashed rgba(200,149,108,0.40)', marginBottom: 14 }} />
+                <p style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: '#C8956C', lineHeight: 1.7 }}>
                   {profile.chart.summary}
                 </p>
               </div>
             )}
 
-            {/* Intentions */}
-            <div style={card}>
-              <p style={goldLabel}>{t.whatYouToldMe}</p>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+            {/* Intentions section */}
+            <div style={innerBox}>
+              <p style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 13, color: '#C8956C', marginBottom: 14 }}>
+                {`// ${t.whatYouToldMe}`}
+              </p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                 {[
                   { q: t.wantInLoveLabel, a: profile.intentions.wantInLove },
                   { q: t.patternLabel, a: profile.intentions.repeatingPattern },
                   { q: t.safetyLabel, a: profile.intentions.feelingSafe },
                 ].map(({ q, a }) => (
                   <div key={q}>
-                    <p style={{ fontFamily: 'var(--font-body)', fontSize: 10, color: 'var(--text-card-muted)', marginBottom: 4 }}>{q}</p>
-                    <p style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 15, color: 'var(--text-card)', lineHeight: 1.5 }}>
+                    <p style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: '#101010', fontWeight: 400, marginBottom: 3 }}>{q}</p>
+                    <p style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 14, color: '#C8956C', lineHeight: 1.5 }}>
                       "{a}"
                     </p>
                   </div>
@@ -148,83 +146,92 @@ export default function PortraitPage() {
               </div>
             </div>
 
-            {/* Portrait */}
+            {/* Portrait patterns */}
             {portrait && portrait.patterns.length > 0 ? (
-              <div style={card}>
-                <p style={goldLabel}>{t.patternsNoticed}</p>
+              <div style={innerBox}>
+                <p style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 13, color: '#C8956C', marginBottom: 14 }}>
+                  {`// ${t.patternsNoticed}`}
+                </p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                   {portrait.patterns.map((pattern, i) => (
                     <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
-                      <span style={{ color: 'var(--gold)', fontSize: 11, marginTop: 3, flexShrink: 0 }}>✦</span>
-                      <p style={{ fontFamily: 'var(--font-body)', fontSize: 13, fontWeight: 300, color: 'var(--text-card-secondary)', lineHeight: 1.6 }}>
+                      <span style={{ color: '#C8956C', fontSize: 10, marginTop: 4, flexShrink: 0 }}>✦</span>
+                      <p style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: '#C8956C', lineHeight: 1.6 }}>
                         {pattern}
                       </p>
                     </div>
                   ))}
                 </div>
                 {portrait.idealPartnerPicture && (
-                  <div style={{ marginTop: 16, paddingTop: 16, borderTop: '1px solid rgba(200,149,108,0.18)' }}>
-                    <p style={{ ...goldLabel, marginBottom: 8 }}>{t.idealPartnerTitle}</p>
-                    <p style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 14, color: 'var(--text-card-secondary)', lineHeight: 1.65 }}>
+                  <div style={{ marginTop: 14, paddingTop: 14, borderTop: '1px dashed rgba(200,149,108,0.40)' }}>
+                    <p style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 13, color: '#C8956C', marginBottom: 6 }}>
+                      {`// ${t.idealPartnerTitle}`}
+                    </p>
+                    <p style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: '#C8956C', lineHeight: 1.65 }}>
                       {portrait.idealPartnerPicture}
                     </p>
                   </div>
                 )}
               </div>
             ) : (
-              <div style={{ ...card, textAlign: 'center', padding: '28px 20px' }}>
-                <p style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 16, color: 'var(--text-card-muted)', lineHeight: 1.5 }}>
+              <div style={{ ...innerBox, textAlign: 'center', padding: '24px 20px' }}>
+                <p style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 15, color: '#C8956C', lineHeight: 1.5, opacity: 0.65 }}>
                   {t.stillGettingToKnow}
                 </p>
-                <p style={{ fontFamily: 'var(--font-body)', fontSize: 13, fontWeight: 300, color: 'var(--text-card-muted)', marginTop: 8, lineHeight: 1.6, opacity: 0.7 }}>
+                <p style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: '#C8956C', marginTop: 8, lineHeight: 1.6, opacity: 0.45 }}>
                   {t.patternsEmerge}
                 </p>
               </div>
             )}
 
-            {/* Privacy */}
-            <div style={{
-              border: '1px solid rgba(200,149,108,0.18)',
-              borderRadius: isMobile ? 20 : 12,
-              padding: '14px 16px',
-              background: isMobile ? '#fff' : 'rgba(26,23,20,0.40)',
-            }}>
-              <p style={{ fontFamily: 'var(--font-body)', fontSize: 11, color: isMobile ? 'rgba(26,23,20,0.50)' : 'rgba(245,239,232,0.55)', lineHeight: 1.6 }}>
-                {t.privacyNote}
-              </p>
-            </div>
+            {/* Privacy note */}
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: 11, color: 'rgba(16,16,16,0.35)', lineHeight: 1.6, textAlign: 'center', fontStyle: 'italic' }}>
+              {t.privacyNote}
+            </p>
 
             {/* Delete */}
             {!showDeleteConfirm ? (
               <button
                 onClick={() => setShowDeleteConfirm(true)}
-                style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: isMobile ? 'rgba(200,149,108,0.55)' : 'rgba(245,239,232,0.30)', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'center', alignSelf: 'center' }}
+                style={{
+                  width: '100%',
+                  background: '#F2C8C8',
+                  border: 'none',
+                  borderRadius: 14,
+                  padding: '15px 20px',
+                  color: '#101010',
+                  fontFamily: 'var(--font-body)',
+                  fontSize: 15,
+                  fontWeight: 500,
+                  cursor: 'pointer',
+                }}
               >
                 {t.deleteData}
               </button>
             ) : (
-              <div style={{ ...card, textAlign: 'center', display: 'flex', flexDirection: 'column', gap: 12 }}>
-                <p style={{ fontFamily: 'var(--font-body)', fontSize: 14, color: 'var(--text-card)' }}>{t.deleteConfirm}</p>
-                <div style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>
+              <div style={{ background: '#F2C8C8', borderRadius: 14, padding: '20px', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: 12 }}>
+                <p style={{ fontFamily: 'var(--font-body)', fontSize: 14, color: '#101010' }}>{t.deleteConfirm}</p>
+                <div style={{ display: 'flex', gap: 10 }}>
                   <button
                     onClick={handleDelete}
-                    style={{ background: 'rgba(180,60,60,0.10)', border: '1px solid rgba(180,60,60,0.32)', borderRadius: 18, padding: '8px 20px', color: '#e07070', fontFamily: 'var(--font-body)', fontSize: 13, cursor: 'pointer' }}
+                    style={{ flex: 1, background: 'rgba(180,60,60,0.18)', border: '1px solid rgba(180,60,60,0.35)', borderRadius: 10, padding: '10px', color: '#c0392b', fontFamily: 'var(--font-body)', fontSize: 13, fontWeight: 500, cursor: 'pointer' }}
                   >
                     {t.deleteYes}
                   </button>
                   <button
                     onClick={() => setShowDeleteConfirm(false)}
-                    style={{ background: 'rgba(255,255,255,0.55)', border: '1px solid rgba(200,149,108,0.28)', borderRadius: 18, padding: '8px 20px', color: 'var(--text-card)', fontFamily: 'var(--font-body)', fontSize: 13, cursor: 'pointer' }}
+                    style={{ flex: 1, background: 'rgba(255,255,255,0.65)', border: '1px solid rgba(200,149,108,0.28)', borderRadius: 10, padding: '10px', color: '#101010', fontFamily: 'var(--font-body)', fontSize: 13, cursor: 'pointer' }}
                   >
                     {t.deleteCancel}
                   </button>
                 </div>
               </div>
             )}
+
           </div>
         </div>
       </div>
       <NavBar />
-    </>
+    </div>
   )
 }
