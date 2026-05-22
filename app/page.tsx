@@ -67,7 +67,7 @@ function SplitScreen({ imgSrc, imgFit = 'contain', onBack, children }: {
           </button>
         )}
         <span style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: '#C8A84B', letterSpacing: '0.01em', fontWeight: 400 }}>
-          {lang === 'zh' ? '{Mia: 帮助你建立内在的信任 }' : '{Mia: build trust from the inside out }'}
+          {'{Mia: build trust from the inside out }'}
         </span>
       </div>
 
