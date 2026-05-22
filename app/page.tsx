@@ -409,6 +409,104 @@ export default function OnboardingPage() {
 
   /* ── BIRTH ───────────────────────────────────── */
   if (step === 'birth') {
+    const canNext = !!(birth.date && birth.city)
+
+    /* ── Mobile layout ── */
+    if (isMobile) {
+      const mInput: React.CSSProperties = {
+        width: '100%', background: '#fff',
+        border: '1.5px solid rgba(200,149,108,0.75)',
+        borderRadius: 10, padding: '15px 16px',
+        fontFamily: 'var(--font-body)', fontSize: 16,
+        color: 'rgba(0,0,0,0.55)', outline: 'none',
+        textAlign: 'center', transition: 'border-color 180ms',
+        boxSizing: 'border-box',
+      }
+      const mLabel: React.CSSProperties = {
+        fontFamily: 'var(--font-body)', fontSize: 14,
+        fontWeight: 400, color: '#101010',
+        display: 'block', marginBottom: 7,
+      }
+      const mFocus = (e: React.FocusEvent<HTMLInputElement>) => { e.target.style.borderColor = 'rgba(200,149,108,1)' }
+      const mBlur  = (e: React.FocusEvent<HTMLInputElement>) => { e.target.style.borderColor = 'rgba(200,149,108,0.75)' }
+
+      return (
+        <div style={{ position: 'fixed', inset: 0, background: '#14141a', display: 'flex', flexDirection: 'column', overflowY: 'auto', overflowX: 'hidden' }}>
+          {/* Top bar */}
+          <div style={{ padding: '16px 20px', flexShrink: 0, display: 'flex', alignItems: 'center', gap: 10 }}>
+            <button onClick={() => setStep('welcome')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.45)', fontSize: 18, lineHeight: 1, padding: 0 }}>←</button>
+            <span style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: '#C8A84B', letterSpacing: '0.01em', fontWeight: 400 }}>
+              {lang === 'zh' ? '{Mia: 帮助你培养关系 }' : '{Mia: help you to nurture relationships }'}
+            </span>
+          </div>
+
+          <div style={{ padding: '4px 16px 28px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
+            <div style={{ width: '100%', maxWidth: 460, display: 'flex', flexDirection: 'column', gap: 12 }}>
+
+              {/* Form card */}
+              <div style={{ background: '#fff', borderRadius: 20, padding: '20px 20px 28px' }}>
+                {/* Language pill */}
+                <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 18 }}>
+                  <div style={{ display: 'flex', background: 'rgba(0,0,0,0.06)', borderRadius: 20, padding: 3 }}>
+                    <button onClick={() => setLang('en')} style={{ background: lang === 'en' ? '#fff' : 'none', border: 'none', borderRadius: 16, padding: '5px 12px', fontFamily: 'var(--font-body)', fontSize: 13, fontWeight: 500, color: lang === 'en' ? '#101010' : 'rgba(0,0,0,0.40)', cursor: 'pointer', transition: 'all 150ms', boxShadow: lang === 'en' ? '0 1px 3px rgba(0,0,0,0.10)' : 'none' }}>EN</button>
+                    <button onClick={() => setLang('zh')} style={{ background: lang === 'zh' ? '#fff' : 'none', border: 'none', borderRadius: 16, padding: '5px 12px', fontFamily: 'var(--font-body)', fontSize: 13, fontWeight: 500, color: lang === 'zh' ? '#101010' : 'rgba(0,0,0,0.40)', cursor: 'pointer', transition: 'all 150ms', boxShadow: lang === 'zh' ? '0 1px 3px rgba(0,0,0,0.10)' : 'none' }}>中文</button>
+                  </div>
+                </div>
+
+                <p style={{ fontFamily: 'var(--font-body)', fontSize: 20, fontWeight: 700, color: '#101010', letterSpacing: '-0.01em', lineHeight: 1.3, marginBottom: 24 }}>
+                  {lang === 'zh' ? '{ 我需要知道你的八字，生日}' : '{ I need to know your Bazi, birthday}'}
+                </p>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                  <div>
+                    <label style={mLabel}>{lang === 'zh' ? '出生日期' : 'Birth Date'}</label>
+                    <input type="text" style={mInput} value={birth.date}
+                      onChange={(e) => setBirth({ ...birth, date: e.target.value })}
+                      placeholder="YYYY-MM-DD" onFocus={mFocus} onBlur={mBlur} />
+                  </div>
+                  <div>
+                    <label style={mLabel}>{lang === 'zh' ? '出生时间' : 'Birth Time'}</label>
+                    <input type="text" style={mInput} value={birth.time}
+                      onChange={(e) => setBirth({ ...birth, time: e.target.value })}
+                      placeholder={lang === 'zh' ? 'HH:MM（可选）' : 'HH:MM'}
+                      onFocus={mFocus} onBlur={mBlur} />
+                  </div>
+                  <div>
+                    <label style={mLabel}>{lang === 'zh' ? '出生城市' : 'Birth City'}</label>
+                    <input type="text" style={mInput} value={birth.city}
+                      onChange={(e) => setBirth({ ...birth, city: e.target.value })}
+                      onKeyDown={(e) => { if (e.key === 'Enter' && canNext) setStep('q1') }}
+                      placeholder={lang === 'zh' ? '例如 北京，中国' : 'e.g. Stockholm, Sweden'}
+                      onFocus={mFocus} onBlur={mBlur} />
+                  </div>
+                </div>
+
+                <div style={{ height: 32 }} />
+
+                <button
+                  style={{ width: '100%', background: canNext ? '#101010' : 'rgba(16,16,16,0.22)', border: 'none', borderRadius: 10, padding: '15px 14px', fontFamily: 'var(--font-body)', fontSize: 15, fontWeight: 600, color: '#fff', cursor: canNext ? 'pointer' : 'not-allowed', transition: 'opacity 160ms' }}
+                  onClick={() => canNext && setStep('q1')}
+                >
+                  {lang === 'zh' ? '下一步' : 'Next step'}
+                </button>
+              </div>
+
+              {/* Illustration card */}
+              <div style={{ background: '#fff', borderRadius: 20, padding: '32px 24px 28px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20 }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/lily.png" alt="" style={{ width: 'clamp(110px, 38%, 150px)', objectFit: 'contain' }} />
+                <p style={{ fontFamily: 'var(--font-display)', fontSize: 20, fontWeight: 700, fontStyle: 'italic', color: '#1A1AFF', textAlign: 'center', margin: 0 }}>
+                  {lang === 'zh' ? '你值得被爱' : "You're valued to be loved"}
+                </p>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    /* ── Desktop layout (unchanged) ── */
     const hd = lang === 'zh'
       ? '{ 你的出生时间和地点\n将解锁你的八字和星盘 }'
       : '{ Your birth time and place will unlock\nyour Bazi and astrological chart }'
@@ -432,11 +530,10 @@ export default function OnboardingPage() {
             <div>
               <label style={sl}>{t.birthDate}</label>
               <input
-                type={isMobile ? 'text' : 'date'}
+                type="date"
                 style={si}
                 value={birth.date}
                 onChange={(e) => setBirth({ ...birth, date: e.target.value })}
-                placeholder={isMobile ? (lang === 'zh' ? '推荐 1995-01-15' : 'e.g. 1995-01-15') : undefined}
                 onFocus={fa} onBlur={ba}
               />
             </div>
@@ -446,11 +543,10 @@ export default function OnboardingPage() {
                 <span style={{ opacity: 0.55, fontStyle: 'italic', textTransform: 'none', letterSpacing: 0 }}>{t.birthTimeOptional}</span>
               </label>
               <input
-                type={isMobile ? 'text' : 'time'}
+                type="time"
                 style={si}
                 value={birth.time}
                 onChange={(e) => setBirth({ ...birth, time: e.target.value })}
-                placeholder={isMobile ? (lang === 'zh' ? '例如 14:30（可选）' : 'e.g. 14:30 (optional)') : undefined}
                 onFocus={fa} onBlur={ba}
               />
             </div>
@@ -458,14 +554,14 @@ export default function OnboardingPage() {
               <label style={sl}>{t.birthCity}</label>
               <input style={si} placeholder={t.birthCityPlaceholder} value={birth.city}
                 onChange={(e) => setBirth({ ...birth, city: e.target.value })}
-                onKeyDown={(e) => { if (e.key === 'Enter' && birth.date && birth.city) setStep('q1') }}
+                onKeyDown={(e) => { if (e.key === 'Enter' && canNext) setStep('q1') }}
                 onFocus={fa} onBlur={ba} />
             </div>
           </div>
 
           <button
-            style={{ ...sb, marginTop: 'auto', opacity: birth.date && birth.city ? 1 : 0.32, cursor: birth.date && birth.city ? 'pointer' : 'not-allowed' }}
-            onClick={() => birth.date && birth.city && setStep('q1')}
+            style={{ ...sb, marginTop: 'auto', opacity: canNext ? 1 : 0.32, cursor: canNext ? 'pointer' : 'not-allowed' }}
+            onClick={() => canNext && setStep('q1')}
           >
             {nl}
           </button>
