@@ -161,7 +161,7 @@ export default function CompatibilityPage() {
                   <input
                     type={isMobile ? 'text' : 'date'}
                     style={fieldInput}
-                    placeholder="YYYY-MM-DD"
+                    placeholder={isMobile ? (lang === 'zh' ? '推荐 1995-01-15' : 'e.g. 1995-01-15') : undefined}
                     value={partnerBirthDate}
                     onChange={(e) => setPartnerBirthDate(e.target.value)}
                     onFocus={onFocus} onBlur={onBlur}
@@ -175,7 +175,7 @@ export default function CompatibilityPage() {
                   <input
                     type={isMobile ? 'text' : 'time'}
                     style={fieldInput}
-                    placeholder="HH-MM"
+                    placeholder={isMobile ? (lang === 'zh' ? '例如 14:30（可选）' : 'e.g. 14:30 (optional)') : undefined}
                     value={partnerBirthTime}
                     onChange={(e) => setPartnerBirthTime(e.target.value)}
                     onFocus={onFocus} onBlur={onBlur}

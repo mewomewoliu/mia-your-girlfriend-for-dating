@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { buildCompatibilityPrompt } from '@/lib/mia-prompt'
 import { deriveRawChart } from '@/lib/chart'
 import { addCompatibility } from '@/lib/db'
+import { parseBirthDate } from '@/lib/parse-birth'
 import { getSupabaseServer } from '@/lib/supabase/server'
 import type { UserProfile, CompatibilityReport } from '@/lib/types'
 
@@ -23,7 +24,9 @@ export async function POST(req: NextRequest) {
         language?: 'en' | 'zh'
       }
 
-    const [py, pm, pd] = partnerBirthDate.split('-').map(Number)
+    const normalizedDate = parseBirthDate(partnerBirthDate)
+    if (!normalizedDate) return NextResponse.json({ error: 'Invalid birth date. Please use YYYY-MM-DD, DD-MM-YYYY, or MM DD YYYY.' }, { status: 400 })
+    const [py, pm, pd] = normalizedDate.split('-').map(Number)
     const partnerRaw = deriveRawChart({ year: py, month: pm, day: pd })
     const partnerInfo = `${partnerRaw.sunSign} sun, ${partnerRaw.chineseZodiac} zodiac, ${partnerRaw.yearElement} element`
 

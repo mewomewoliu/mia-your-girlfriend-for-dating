@@ -234,175 +234,171 @@ export default function OnboardingPage() {
       width: '100%',
       background: '#fff',
       border: '1px solid rgba(0,0,0,0.12)',
-      borderRadius: 8,
-      padding: '13px 15px',
+      borderRadius: 10,
+      padding: '14px 16px',
       fontFamily: 'var(--font-body)',
       fontSize: 14,
       color: 'rgba(0,0,0,0.70)',
       outline: 'none',
       textAlign: 'center',
       transition: 'border-color 200ms',
+      boxSizing: 'border-box',
     }
-    const faw = (e: React.FocusEvent<HTMLInputElement>) => { e.target.style.borderColor = 'rgba(0,0,0,0.35)' }
+    const faw = (e: React.FocusEvent<HTMLInputElement>) => { e.target.style.borderColor = 'rgba(0,0,0,0.30)' }
     const baw = (e: React.FocusEvent<HTMLInputElement>) => { e.target.style.borderColor = 'rgba(0,0,0,0.12)' }
+    const blue = '#1A1AFF'
 
     return (
-      <div className="welcome-root animate-fade-in">
-        {/* Top nav */}
-        <div style={{ height: 56, padding: '0 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
-          <span style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: '#C8956C', letterSpacing: '0.01em', fontWeight: 400 }}>
-            {'{Mia: a girlfriend helps you date and love yourself }'}
+      <div className="welcome-root animate-fade-in" style={{ background: '#14141a', overflowY: 'auto', overflowX: 'hidden' }}>
+        {/* Top bar */}
+        <div style={{ padding: '16px 20px', flexShrink: 0 }}>
+          <span style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: '#C8A84B', letterSpacing: '0.01em', fontWeight: 400 }}>
+            {lang === 'zh' ? '{Mia: 帮助你培养关系 }' : '{Mia: help you to nurture relationships }'}
           </span>
-          <button
-            className="desk"
-            onClick={() => setStep('birth')}
-            style={{ background: '#2b2b2b', border: 'none', borderRadius: 6, padding: '7px 16px', color: 'rgba(255,255,255,0.85)', fontFamily: 'var(--font-body)', fontSize: 12, fontWeight: 500, cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0 }}
-          >
-            Say Hi
-          </button>
         </div>
 
-        <div style={{ flex: 1, padding: '0 16px 16px', display: 'flex', minHeight: 0, overflow: 'hidden' }}>
-          <div className="welcome-split">
+        {/* Cards */}
+        <div style={{ padding: '4px 16px 28px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
+          <div style={{ width: '100%', maxWidth: 460 }}>
 
-            <div className="welcome-left">
+            {/* Hero card */}
+            <div style={{ background: '#fff', borderRadius: 20, padding: 'clamp(24px, 4vw, 36px)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20, marginBottom: 12 }}>
+              <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(20px, 3.5vw, 26px)', fontWeight: 700, fontStyle: 'italic', color: blue, textAlign: 'center', margin: 0, letterSpacing: '-0.01em', lineHeight: 1.2 }}>
+                {lang === 'zh' ? 'Mia 是你的女朋友' : 'Mia is your girlfriend'}
+              </h1>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/flower.png" alt="" style={{ position: 'absolute', top: '-5.58%', left: '-10%', width: '120%', height: '111%', objectFit: 'cover', pointerEvents: 'none' }} />
-              <div style={{ position: 'relative', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: 'clamp(16px, 3vw, 40px)' }}>
-                <h1 className="img-heading" style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontStyle: 'normal', fontSize: 'clamp(22px, 3.8vw, 48px)', lineHeight: 1.25, color: '#101010', marginBottom: 8 }}>
-                  {lang === 'zh' ? (
-                    <>Mia <span style={{ color: '#7a6830' }}>是你的</span>女朋友</>
-                  ) : (
-                    <>Mia <span style={{ color: '#7a6830' }}>is your</span> girlfriend</>
-                  )}
-                </h1>
-                <p className="img-sub" style={{ fontFamily: 'var(--font-body)', fontSize: 'clamp(12px, 1.3vw, 17px)', lineHeight: 1.65, color: 'rgba(60,48,20,0.75)', maxWidth: 380, fontWeight: 400 }}>
-                  {lang === 'zh' ? '我在这里帮助你更聪明地恋爱，更清晰地理解爱。更重要的是，帮助你了解自己和爱自己。' : "I'm here to help you date smarter and feel clearer about love. And more importantly, I will help you to know yourself and love yourself while chase your love on other."}
-                </p>
-              </div>
+              <img
+                src="/flower.png"
+                alt=""
+                style={{ width: 'clamp(150px, 42%, 200px)', aspectRatio: '1 / 1', objectFit: 'contain', pointerEvents: 'none' }}
+              />
+              <p style={{ fontFamily: 'var(--font-body)', fontSize: 'clamp(14px, 1.6vw, 16px)', lineHeight: 1.7, color: blue, textAlign: 'center', margin: 0, maxWidth: 340 }}>
+                {lang === 'zh'
+                  ? '我在这里帮助你先与自己建立关系，再与你的爱人建立关系。'
+                  : "I'm here to help you to build relationships with yourself first and your loves."}
+              </p>
             </div>
 
-            <div className="welcome-right">
-              <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 'clamp(12px, 2vh, 20px)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                  <button onClick={() => setLang('en')} style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'var(--font-body)', fontSize: 13, color: lang === 'en' ? '#101010' : '#9b8340', padding: '4px 6px', fontWeight: lang === 'en' ? 500 : 400 }}>EN</button>
-                  <span style={{ color: 'rgba(0,0,0,0.20)', fontSize: 13 }}>|</span>
-                  <button onClick={() => setLang('zh')} style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'var(--font-body)', fontSize: 13, color: lang === 'zh' ? '#101010' : '#9b8340', padding: '4px 6px', fontWeight: lang === 'zh' ? 500 : 400 }}>中文</button>
+            {/* Form card */}
+            <div style={{ background: '#fff', borderRadius: 20, padding: 'clamp(20px, 4vw, 28px)', display: 'flex', flexDirection: 'column', gap: 0 }}>
+              {/* Header row */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: 28 }}>
+                <p style={{ fontFamily: 'var(--font-body)', fontSize: 'clamp(17px, 2.5vw, 22px)', fontWeight: 700, color: '#101010', letterSpacing: '-0.02em', margin: 0, lineHeight: 1.3 }}>
+                  {lang === 'zh' ? '{ 你叫什么名字？}' : "{ what's your name? }"}
+                </p>
+                {/* Language pill */}
+                <div style={{ display: 'flex', background: 'rgba(0,0,0,0.06)', borderRadius: 20, padding: 3, flexShrink: 0 }}>
+                  <button
+                    onClick={() => setLang('en')}
+                    style={{ background: lang === 'en' ? '#fff' : 'none', border: 'none', borderRadius: 16, padding: '5px 12px', fontFamily: 'var(--font-body)', fontSize: 13, fontWeight: 500, color: lang === 'en' ? '#101010' : 'rgba(0,0,0,0.40)', cursor: 'pointer', transition: 'all 150ms', boxShadow: lang === 'en' ? '0 1px 3px rgba(0,0,0,0.10)' : 'none' }}
+                  >EN</button>
+                  <button
+                    onClick={() => setLang('zh')}
+                    style={{ background: lang === 'zh' ? '#fff' : 'none', border: 'none', borderRadius: 16, padding: '5px 12px', fontFamily: 'var(--font-body)', fontSize: 13, fontWeight: 500, color: lang === 'zh' ? '#101010' : 'rgba(0,0,0,0.40)', cursor: 'pointer', transition: 'all 150ms', boxShadow: lang === 'zh' ? '0 1px 3px rgba(0,0,0,0.10)' : 'none' }}
+                  >中文</button>
                 </div>
               </div>
 
-              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 'clamp(12px, 2vh, 18px)', overflowY: 'auto' }}>
-                <p style={{ fontFamily: 'var(--font-body)', fontSize: 'clamp(20px, 2.2vw, 26px)', fontWeight: 700, color: '#101010', letterSpacing: '-0.02em', lineHeight: 1.25, whiteSpace: 'pre-line' }}>
-                  {lang === 'zh' ? '{ 开始吧\n你叫什么名字？}' : "{ Get started\nwhat's your name? }"}
-                </p>
+              <input
+                style={wInput}
+                placeholder={lang === 'zh' ? '你叫什么？（可选）' : 'What should I call you(optional)'}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                onKeyDown={(e) => { if (e.key === 'Enter' && userId) setStep('birth') }}
+                onFocus={faw} onBlur={baw}
+              />
 
-                <input
-                  style={wInput}
-                  placeholder={t.namePlaceholder}
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  onKeyDown={(e) => { if (e.key === 'Enter' && userId) setStep('birth') }}
-                  onFocus={faw} onBlur={baw}
-                />
+              <div style={{ height: 28 }} />
 
-                {/* Authenticated: just show Next step */}
-                {userId && (
-                  <button
-                    onClick={() => setStep('birth')}
-                    style={{ width: '100%', background: '#101010', border: 'none', borderRadius: 8, padding: '13px 14px', fontFamily: 'var(--font-body)', fontSize: 14, fontWeight: 500, color: '#fff', cursor: 'pointer', transition: 'opacity 160ms' }}
-                    onMouseEnter={(e) => { e.currentTarget.style.opacity = '0.80' }}
-                    onMouseLeave={(e) => { e.currentTarget.style.opacity = '1' }}
-                  >
-                    {lang === 'zh' ? '下一步' : 'Next step'}
-                  </button>
-                )}
+              {/* Authenticated: Next step */}
+              {userId && (
+                <button
+                  onClick={() => setStep('birth')}
+                  style={{ width: '100%', background: '#101010', border: 'none', borderRadius: 10, padding: '15px 14px', fontFamily: 'var(--font-body)', fontSize: 15, fontWeight: 600, color: '#fff', cursor: 'pointer', transition: 'opacity 160ms' }}
+                  onMouseEnter={(e) => { e.currentTarget.style.opacity = '0.80' }}
+                  onMouseLeave={(e) => { e.currentTarget.style.opacity = '1' }}
+                >
+                  {lang === 'zh' ? '下一步' : 'Next step'}
+                </button>
+              )}
 
-                {/* Not authenticated: show sign-up options */}
-                {authChecked && !userId && (
-                  <>
-                    {magicState !== 'sent' ? (
-                      <>
-                        {/* Google */}
-                        <button
-                          onClick={handleGoogleSignIn}
-                          disabled={googleLoading}
-                          style={{
-                            width: '100%', background: '#fff', border: '1px solid rgba(0,0,0,0.14)', borderRadius: 8,
-                            padding: '12px 14px', fontFamily: 'var(--font-body)', fontSize: 14, fontWeight: 500,
-                            color: 'rgba(0,0,0,0.70)', cursor: googleLoading ? 'not-allowed' : 'pointer',
-                            opacity: googleLoading ? 0.55 : 1, display: 'flex', alignItems: 'center',
-                            justifyContent: 'center', gap: 9, transition: 'border-color 150ms, opacity 150ms',
-                          }}
-                          onMouseEnter={(e) => { if (!googleLoading) e.currentTarget.style.borderColor = 'rgba(0,0,0,0.28)' }}
-                          onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.14)' }}
-                        >
-                          <GoogleIcon />
-                          {googleLoading
-                            ? (lang === 'zh' ? '跳转中...' : 'redirecting...')
-                            : (lang === 'zh' ? '使用 Google 继续' : 'continue with Google')}
-                        </button>
-
-                        {/* Divider */}
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                          <div style={{ flex: 1, height: 1, background: 'rgba(0,0,0,0.08)' }} />
-                          <span style={{ fontFamily: 'var(--font-body)', fontSize: 11, color: 'rgba(0,0,0,0.30)', letterSpacing: '0.04em' }}>
-                            {lang === 'zh' ? '或' : 'or'}
-                          </span>
-                          <div style={{ flex: 1, height: 1, background: 'rgba(0,0,0,0.08)' }} />
-                        </div>
-
-                        {/* Email magic link */}
-                        <form onSubmit={handleMagicLink} style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                          <input
-                            type="email"
-                            placeholder={lang === 'zh' ? '你的邮箱' : 'your@email.com'}
-                            value={magicEmail}
-                            onChange={(e) => setMagicEmail(e.target.value)}
-                            required
-                            style={{ ...wInput }}
-                            onFocus={faw} onBlur={baw}
-                          />
-                          {magicState === 'error' && (
-                            <p style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: '#c0392b', textAlign: 'center' }}>{magicError}</p>
-                          )}
-                          <button
-                            type="submit"
-                            disabled={magicState === 'sending' || !magicEmail.trim()}
-                            style={{
-                              width: '100%', background: '#101010', border: 'none', borderRadius: 8,
-                              padding: '13px 14px', fontFamily: 'var(--font-body)', fontSize: 14, fontWeight: 500,
-                              color: '#fff', cursor: magicState === 'sending' || !magicEmail.trim() ? 'not-allowed' : 'pointer',
-                              opacity: magicState === 'sending' || !magicEmail.trim() ? 0.40 : 1,
-                              transition: 'opacity 160ms',
-                            }}
-                          >
-                            {magicState === 'sending'
-                              ? (lang === 'zh' ? '发送中...' : 'sending...')
-                              : (lang === 'zh' ? '发送魔法链接 →' : 'send magic link →')}
-                          </button>
-                        </form>
-                      </>
-                    ) : (
-                      <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', gap: 10, padding: '4px 0' }}>
-                        <p style={{ fontFamily: 'var(--font-body)', fontSize: 15, fontWeight: 600, color: '#101010', letterSpacing: '-0.01em' }}>
-                          {lang === 'zh' ? '查看你的邮箱' : 'check your email'}
-                        </p>
-                        <p style={{ fontFamily: 'var(--font-body)', fontSize: 13, fontWeight: 300, color: 'rgba(0,0,0,0.50)', lineHeight: 1.6 }}>
-                          {lang === 'zh'
-                            ? `我们已向 ${magicEmail} 发送了一个魔法链接。点击它即可登录。`
-                            : `we sent a magic link to ${magicEmail}. click it to sign in.`}
-                        </p>
-                        <button
-                          onClick={() => { setMagicState('idle'); setMagicEmail('') }}
-                          style={{ background: 'none', border: 'none', fontFamily: 'var(--font-body)', fontSize: 12, color: 'rgba(0,0,0,0.30)', cursor: 'pointer' }}
-                        >
-                          {lang === 'zh' ? '使用其他邮箱' : 'use a different email'}
-                        </button>
+              {/* Not authenticated: auth options */}
+              {authChecked && !userId && (
+                <>
+                  {magicState !== 'sent' ? (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                      <button
+                        onClick={handleGoogleSignIn}
+                        disabled={googleLoading}
+                        style={{
+                          width: '100%', background: '#fff', border: '1px solid rgba(0,0,0,0.14)', borderRadius: 10,
+                          padding: '13px 14px', fontFamily: 'var(--font-body)', fontSize: 14, fontWeight: 500,
+                          color: 'rgba(0,0,0,0.70)', cursor: googleLoading ? 'not-allowed' : 'pointer',
+                          opacity: googleLoading ? 0.55 : 1, display: 'flex', alignItems: 'center',
+                          justifyContent: 'center', gap: 9, transition: 'all 150ms', boxSizing: 'border-box',
+                        }}
+                        onMouseEnter={(e) => { if (!googleLoading) e.currentTarget.style.borderColor = 'rgba(0,0,0,0.28)' }}
+                        onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.14)' }}
+                      >
+                        <GoogleIcon />
+                        {googleLoading
+                          ? (lang === 'zh' ? '跳转中...' : 'redirecting...')
+                          : (lang === 'zh' ? '使用 Google 继续' : 'continue with Google')}
+                      </button>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                        <div style={{ flex: 1, height: 1, background: 'rgba(0,0,0,0.08)' }} />
+                        <span style={{ fontFamily: 'var(--font-body)', fontSize: 11, color: 'rgba(0,0,0,0.30)', letterSpacing: '0.04em' }}>{lang === 'zh' ? '或' : 'or'}</span>
+                        <div style={{ flex: 1, height: 1, background: 'rgba(0,0,0,0.08)' }} />
                       </div>
-                    )}
-                  </>
-                )}
-              </div>
+                      <form onSubmit={handleMagicLink} style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                        <input
+                          type="email"
+                          placeholder={lang === 'zh' ? '你的邮箱' : 'your@email.com'}
+                          value={magicEmail}
+                          onChange={(e) => setMagicEmail(e.target.value)}
+                          required
+                          style={{ ...wInput }}
+                          onFocus={faw} onBlur={baw}
+                        />
+                        {magicState === 'error' && (
+                          <p style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: '#c0392b', textAlign: 'center' }}>{magicError}</p>
+                        )}
+                        <button
+                          type="submit"
+                          disabled={magicState === 'sending' || !magicEmail.trim()}
+                          style={{
+                            width: '100%', background: '#101010', border: 'none', borderRadius: 10,
+                            padding: '14px 14px', fontFamily: 'var(--font-body)', fontSize: 15, fontWeight: 600,
+                            color: '#fff', cursor: magicState === 'sending' || !magicEmail.trim() ? 'not-allowed' : 'pointer',
+                            opacity: magicState === 'sending' || !magicEmail.trim() ? 0.40 : 1, transition: 'opacity 160ms',
+                          }}
+                        >
+                          {magicState === 'sending'
+                            ? (lang === 'zh' ? '发送中...' : 'sending...')
+                            : (lang === 'zh' ? '发送魔法链接 →' : 'send magic link →')}
+                        </button>
+                      </form>
+                    </div>
+                  ) : (
+                    <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', gap: 10, padding: '4px 0' }}>
+                      <p style={{ fontFamily: 'var(--font-body)', fontSize: 15, fontWeight: 600, color: '#101010', letterSpacing: '-0.01em' }}>
+                        {lang === 'zh' ? '查看你的邮箱' : 'check your email'}
+                      </p>
+                      <p style={{ fontFamily: 'var(--font-body)', fontSize: 13, fontWeight: 300, color: 'rgba(0,0,0,0.50)', lineHeight: 1.6 }}>
+                        {lang === 'zh'
+                          ? `我们已向 ${magicEmail} 发送了一个魔法链接。点击它即可登录。`
+                          : `we sent a magic link to ${magicEmail}. click it to sign in.`}
+                      </p>
+                      <button
+                        onClick={() => { setMagicState('idle'); setMagicEmail('') }}
+                        style={{ background: 'none', border: 'none', fontFamily: 'var(--font-body)', fontSize: 12, color: 'rgba(0,0,0,0.30)', cursor: 'pointer' }}
+                      >
+                        {lang === 'zh' ? '使用其他邮箱' : 'use a different email'}
+                      </button>
+                    </div>
+                  )}
+                </>
+              )}
             </div>
 
           </div>
@@ -440,7 +436,7 @@ export default function OnboardingPage() {
                 style={si}
                 value={birth.date}
                 onChange={(e) => setBirth({ ...birth, date: e.target.value })}
-                placeholder={isMobile ? (lang === 'zh' ? '例如 1995年1月15日' : 'e.g. Jan 15 1995') : undefined}
+                placeholder={isMobile ? (lang === 'zh' ? '推荐 1995-01-15' : 'e.g. 1995-01-15') : undefined}
                 onFocus={fa} onBlur={ba}
               />
             </div>
@@ -454,7 +450,7 @@ export default function OnboardingPage() {
                 style={si}
                 value={birth.time}
                 onChange={(e) => setBirth({ ...birth, time: e.target.value })}
-                placeholder={isMobile ? (lang === 'zh' ? '例如 15:30（可选）' : 'e.g. 3:30 pm (optional)') : undefined}
+                placeholder={isMobile ? (lang === 'zh' ? '例如 14:30（可选）' : 'e.g. 14:30 (optional)') : undefined}
                 onFocus={fa} onBlur={ba}
               />
             </div>

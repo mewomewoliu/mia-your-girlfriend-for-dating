@@ -2,6 +2,7 @@ import Anthropic from '@anthropic-ai/sdk'
 import { NextRequest, NextResponse } from 'next/server'
 import { deriveRawChart } from '@/lib/chart'
 import { setProfile } from '@/lib/db'
+import { parseBirthDate, parseBirthTime, parseLocation } from '@/lib/parse-birth'
 import { getSupabaseServer } from '@/lib/supabase/server'
 import type { ChartData, UserProfile } from '@/lib/types'
 
@@ -15,9 +16,13 @@ export async function POST(req: NextRequest) {
     const { birthDate, birthTime, birthCity, intentions, language, name } = await req.json()
     const lang: 'en' | 'zh' = language ?? 'en'
 
-    const [year, month, day] = birthDate.split('-').map(Number)
-    const hour = birthTime ? parseInt(birthTime.split(':')[0]) : undefined
-    const raw = deriveRawChart({ year, month, day, hour, city: birthCity })
+    const normalizedDate = parseBirthDate(birthDate)
+    if (!normalizedDate) return NextResponse.json({ error: 'Invalid birth date. Please use YYYY-MM-DD, DD-MM-YYYY, or MM DD YYYY.' }, { status: 400 })
+    const [year, month, day] = normalizedDate.split('-').map(Number)
+    const normalizedTime = parseBirthTime(birthTime)
+    const hour = normalizedTime ? Number(normalizedTime.split(':')[0]) : undefined
+    const normalizedCity = parseLocation(birthCity)
+    const raw = deriveRawChart({ year, month, day, hour, city: normalizedCity })
 
     const prompt = `Generate a warm, personal chart reading for someone born on ${birthDate}${birthTime ? ` at ${birthTime}` : ''} in ${birthCity}.
 
@@ -69,7 +74,7 @@ Rules:
 
     const newProfile: UserProfile = {
       name: name ?? undefined,
-      birth: { date: birthDate, time: birthTime || undefined, city: birthCity },
+      birth: { date: normalizedDate, time: normalizedTime, city: normalizedCity },
       intentions,
       chart: chartData,
       onboardingComplete: true,
