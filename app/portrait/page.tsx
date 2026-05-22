@@ -8,35 +8,6 @@ import { getProfile, getPortrait, deleteAccount } from '@/lib/db'
 import { useLanguage } from '@/lib/language-context'
 import type { UserProfile, PortraitData } from '@/lib/types'
 
-function GalaxySketch() {
-  return (
-    <svg width="88" height="66" viewBox="0 0 130 95" fill="none">
-      <ellipse cx="65" cy="47" rx="62" ry="26" transform="rotate(-18 65 47)" stroke="rgba(0,0,0,0.07)" strokeWidth="0.5"/>
-      <ellipse cx="65" cy="47" rx="52" ry="21" transform="rotate(-16 65 47)" stroke="rgba(0,0,0,0.10)" strokeWidth="0.6"/>
-      <ellipse cx="65" cy="47" rx="42" ry="17" transform="rotate(-14 65 47)" stroke="rgba(0,0,0,0.13)" strokeWidth="0.7"/>
-      <ellipse cx="65" cy="47" rx="32" ry="13" transform="rotate(-12 65 47)" stroke="rgba(0,0,0,0.17)" strokeWidth="0.9"/>
-      <ellipse cx="65" cy="47" rx="22" ry="9" transform="rotate(-10 65 47)" stroke="rgba(0,0,0,0.21)" strokeWidth="1"/>
-      <ellipse cx="65" cy="47" rx="13" ry="5" transform="rotate(-6 65 47)" stroke="rgba(0,0,0,0.27)" strokeWidth="1.2"/>
-      <ellipse cx="65" cy="47" rx="6" ry="2.5" transform="rotate(-3 65 47)" stroke="rgba(0,0,0,0.36)" strokeWidth="1.4"/>
-      <circle cx="8" cy="47" r="0.7" fill="rgba(0,0,0,0.13)"/>
-      <circle cx="122" cy="47" r="0.7" fill="rgba(0,0,0,0.13)"/>
-      <circle cx="18" cy="34" r="0.5" fill="rgba(0,0,0,0.10)"/>
-      <circle cx="112" cy="60" r="0.5" fill="rgba(0,0,0,0.10)"/>
-      <circle cx="22" cy="61" r="0.6" fill="rgba(0,0,0,0.12)"/>
-      <circle cx="108" cy="34" r="0.6" fill="rgba(0,0,0,0.12)"/>
-      <circle cx="34" cy="29" r="0.7" fill="rgba(0,0,0,0.16)"/>
-      <circle cx="96" cy="65" r="0.7" fill="rgba(0,0,0,0.16)"/>
-      <circle cx="27" cy="53" r="0.8" fill="rgba(0,0,0,0.18)"/>
-      <circle cx="103" cy="41" r="0.8" fill="rgba(0,0,0,0.18)"/>
-      <circle cx="48" cy="35" r="1.0" fill="rgba(0,0,0,0.26)"/>
-      <circle cx="82" cy="59" r="1.0" fill="rgba(0,0,0,0.26)"/>
-      <circle cx="65" cy="47" r="4.5" fill="rgba(0,0,0,0.38)"/>
-      <circle cx="65" cy="47" r="2.2" fill="rgba(0,0,0,0.55)"/>
-      <circle cx="65" cy="47" r="0.9" fill="rgba(0,0,0,0.75)"/>
-    </svg>
-  )
-}
-
 export default function PortraitPage() {
   const router = useRouter()
   const { lang, t } = useLanguage()
@@ -69,166 +40,244 @@ export default function PortraitPage() {
 
   if (!profile) return null
 
-  const innerBox: React.CSSProperties = {
-    background: '#E8E5E1',
-    borderRadius: 16,
-    padding: '16px',
-  }
-
-  const displayName = profile.name || (lang === 'zh' ? '你' : 'You')
-
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100dvh', background: '#1a1a1a', paddingBottom: 80 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100dvh', background: '#14141a', paddingBottom: 80 }}>
 
       {/* Tagline */}
       <div style={{ padding: 'max(16px, env(safe-area-inset-top)) 20px 12px', flexShrink: 0 }}>
         <span style={{ fontFamily: 'var(--font-body)', fontSize: 'clamp(11px, 3.5vw, 13px)', color: '#C8A84B', letterSpacing: '0.01em', fontWeight: 400 }}>
-          {'{Mia: build trust from the inside out }'}
+          {lang === 'zh' ? '{Mia: 帮助你建立内在的信任 }' : '{Mia: build trust from the inside out }'}
         </span>
       </div>
 
       {/* Scrollable content */}
       <div style={{ flex: 1, overflowY: 'auto', padding: '0 12px 20px' }}>
-        <div style={{ maxWidth: 480, margin: '0 auto' }}>
+        <div style={{ maxWidth: 480, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 12 }}>
 
-          <div style={{ background: '#F0EDEA', borderRadius: 24, padding: '24px', display: 'flex', flexDirection: 'column', gap: 20 }} className="animate-fade-in">
+          {/* Action buttons row */}
+          <div style={{ display: 'flex', gap: 10, padding: '4px 0 8px' }}>
+            <button
+              onClick={() => setShowDeleteConfirm(true)}
+              style={{
+                flex: 1,
+                background: 'transparent',
+                border: '1.5px solid rgba(242,140,140,0.55)',
+                borderRadius: 10,
+                padding: '12px 16px',
+                color: '#F28C8C',
+                fontFamily: 'var(--font-body)',
+                fontSize: 14,
+                fontWeight: 500,
+                cursor: 'pointer',
+              }}
+            >
+              {lang === 'zh' ? '删除我的数据' : 'Erase my data'}
+            </button>
+            <button
+              onClick={() => router.push('/')}
+              style={{
+                flex: 1,
+                background: '#1A1AFF',
+                border: 'none',
+                borderRadius: 10,
+                padding: '12px 16px',
+                color: '#fff',
+                fontFamily: 'var(--font-body)',
+                fontSize: 14,
+                fontWeight: 600,
+                cursor: 'pointer',
+              }}
+            >
+              {lang === 'zh' ? '更新' : 'Update'}
+            </button>
+          </div>
 
-            {/* Header: name + galaxy */}
-            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12 }}>
-              <p style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(16px, 5vw, 22px)', fontWeight: 700, color: '#101010', lineHeight: 1.3, letterSpacing: '-0.01em', flex: 1, minWidth: 0 }}>
-                {`{${displayName}}, ${lang === 'zh' ? '你的模式' : 'your pattern'}`}
-              </p>
-              <div style={{ flexShrink: 0, marginTop: 2 }}>
-                <GalaxySketch />
+          {/* Delete confirm overlay */}
+          {showDeleteConfirm && (
+            <div style={{ background: 'rgba(242,140,140,0.12)', border: '1px solid rgba(242,140,140,0.30)', borderRadius: 14, padding: '20px', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: 12 }} className="animate-fade-in">
+              <p style={{ fontFamily: 'var(--font-body)', fontSize: 14, color: 'rgba(255,255,255,0.80)' }}>{t.deleteConfirm}</p>
+              <div style={{ display: 'flex', gap: 10 }}>
+                <button
+                  onClick={handleDelete}
+                  style={{ flex: 1, background: 'rgba(180,60,60,0.22)', border: '1px solid rgba(180,60,60,0.45)', borderRadius: 10, padding: '10px', color: '#F28C8C', fontFamily: 'var(--font-body)', fontSize: 13, fontWeight: 500, cursor: 'pointer' }}
+                >
+                  {t.deleteYes}
+                </button>
+                <button
+                  onClick={() => setShowDeleteConfirm(false)}
+                  style={{ flex: 1, background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.14)', borderRadius: 10, padding: '10px', color: 'rgba(255,255,255,0.65)', fontFamily: 'var(--font-body)', fontSize: 13, cursor: 'pointer' }}
+                >
+                  {t.deleteCancel}
+                </button>
               </div>
             </div>
+          )}
 
-            {/* Chart section */}
-            {profile.chart && (
-              <div style={innerBox}>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 5, marginBottom: 14 }}>
+          {/* Card 1 — Chart Reading */}
+          {profile.chart && (
+            <div
+              style={{
+                borderRadius: 20,
+                overflow: 'hidden',
+                position: 'relative',
+                minHeight: 340,
+                display: 'flex',
+                flexDirection: 'column',
+              }}
+              className="animate-fade-in"
+            >
+              {/* Texture background */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/texture-silk.png"
+                alt=""
+                style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', pointerEvents: 'none' }}
+              />
+
+              {/* Top content */}
+              <div style={{ position: 'relative', zIndex: 1, padding: '22px 22px 0', flex: 1 }}>
+                <p style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 700, fontSize: 'clamp(18px, 5.5vw, 24px)', color: '#fff', lineHeight: 1.2, letterSpacing: '-0.01em', marginBottom: 14, textShadow: '0 1px 8px rgba(0,0,0,0.35)' }}>
+                  {lang === 'zh' ? `Mia，你的星盘解读` : `Mia, your chart reading`}
+                </p>
+
+                {/* Chips row */}
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 8 }}>
                   {[
-                    { label: t.labelElement, value: profile.chart.dominantElement },
-                    { label: t.labelSunShort, value: profile.chart.sunSign },
-                    { label: t.labelZodiac, value: profile.chart.chineseZodiac },
-                  ].map(({ label, value }) => (
-                    <p key={label} style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: '#101010', lineHeight: 1.4 }}>
-                      <span style={{ color: 'rgba(16,16,16,0.45)' }}>// {label} |{'  '}</span>
-                      <span style={{ color: '#C8956C', fontWeight: 600 }}>{value}</span>
-                    </p>
+                    { prefix: '// Element |', value: profile.chart.dominantElement },
+                    { prefix: '// Sun |', value: profile.chart.sunSign },
+                    { prefix: '// Zodiac |', value: profile.chart.chineseZodiac },
+                  ].map(({ prefix, value }) => (
+                    <div
+                      key={prefix}
+                      style={{
+                        background: 'rgba(0,0,0,0.32)',
+                        backdropFilter: 'blur(6px)',
+                        WebkitBackdropFilter: 'blur(6px)',
+                        borderRadius: 20,
+                        padding: '5px 12px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 5,
+                      }}
+                    >
+                      <span style={{ fontFamily: 'var(--font-body)', fontSize: 11, color: 'rgba(255,255,255,0.45)' }}>{prefix}</span>
+                      <span style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: '#fff', fontWeight: 600 }}>{value}</span>
+                    </div>
                   ))}
                 </div>
-                <div style={{ borderTop: '1px dashed rgba(200,149,108,0.40)', marginBottom: 14 }} />
-                <p style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: '#C8956C', lineHeight: 1.7 }}>
+              </div>
+
+              {/* Peony center decoration */}
+              <div style={{ position: 'relative', zIndex: 1, display: 'flex', justifyContent: 'center', padding: '10px 0 4px', pointerEvents: 'none' }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/peony.png" alt="" style={{ width: '62%', maxWidth: 220, objectFit: 'contain', filter: 'brightness(1.05)' }} />
+              </div>
+
+              {/* Frosted bottom overlay — summary */}
+              <div style={{
+                position: 'relative',
+                zIndex: 1,
+                background: 'rgba(10,10,14,0.72)',
+                backdropFilter: 'blur(12px)',
+                WebkitBackdropFilter: 'blur(12px)',
+                padding: '16px 20px 22px',
+              }}>
+                <p style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'rgba(255,255,255,0.82)', lineHeight: 1.7 }}>
                   {profile.chart.summary}
                 </p>
               </div>
-            )}
+            </div>
+          )}
 
-            {/* Intentions section */}
-            <div style={innerBox}>
-              <p style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 13, color: '#C8956C', marginBottom: 14 }}>
+          {/* Card 2 — Questions / Intentions */}
+          <div
+            style={{
+              borderRadius: 20,
+              overflow: 'hidden',
+              position: 'relative',
+              minHeight: 260,
+              display: 'flex',
+              flexDirection: 'column',
+            }}
+            className="animate-fade-in"
+          >
+            {/* Texture background */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/texture-green.png"
+              alt=""
+              style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', pointerEvents: 'none' }}
+            />
+
+            {/* Top label */}
+            <div style={{ position: 'relative', zIndex: 1, padding: '22px 22px 0', flex: 1 }}>
+              <p style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 700, fontSize: 'clamp(18px, 5.5vw, 24px)', color: '#fff', lineHeight: 1.2, letterSpacing: '-0.01em', textShadow: '0 1px 8px rgba(0,0,0,0.45)' }}>
+                {lang === 'zh' ? '问题' : 'Questions'}
+              </p>
+            </div>
+
+            {/* Frosted bottom overlay — intentions */}
+            <div style={{
+              position: 'relative',
+              zIndex: 1,
+              background: 'rgba(10,10,14,0.72)',
+              backdropFilter: 'blur(12px)',
+              WebkitBackdropFilter: 'blur(12px)',
+              padding: '16px 20px 22px',
+              marginTop: 60,
+            }}>
+              <p style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 12, color: 'rgba(255,255,255,0.45)', marginBottom: 14 }}>
                 {`// ${t.whatYouToldMe}`}
               </p>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
                 {[
                   { q: t.wantInLoveLabel, a: profile.intentions.wantInLove },
                   { q: t.patternLabel, a: profile.intentions.repeatingPattern },
                   { q: t.safetyLabel, a: profile.intentions.feelingSafe },
                 ].map(({ q, a }) => (
                   <div key={q}>
-                    <p style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: '#101010', fontWeight: 400, marginBottom: 3 }}>{q}</p>
-                    <p style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 14, color: '#C8956C', lineHeight: 1.5 }}>
-                      "{a}"
+                    <p style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: 'rgba(255,255,255,0.55)', fontWeight: 400, marginBottom: 3 }}>{q}</p>
+                    <p style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 14, color: '#6B9EFF', lineHeight: 1.5 }}>
+                      &ldquo;{a}&rdquo;
                     </p>
                   </div>
                 ))}
               </div>
             </div>
-
-            {/* Portrait patterns */}
-            {portrait && portrait.patterns.length > 0 ? (
-              <div style={innerBox}>
-                <p style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 13, color: '#C8956C', marginBottom: 14 }}>
-                  {`// ${t.patternsNoticed}`}
-                </p>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                  {portrait.patterns.map((pattern, i) => (
-                    <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
-                      <span style={{ color: '#C8956C', fontSize: 10, marginTop: 4, flexShrink: 0 }}>✦</span>
-                      <p style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: '#C8956C', lineHeight: 1.6 }}>
-                        {pattern}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-                {portrait.idealPartnerPicture && (
-                  <div style={{ marginTop: 14, paddingTop: 14, borderTop: '1px dashed rgba(200,149,108,0.40)' }}>
-                    <p style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 13, color: '#C8956C', marginBottom: 6 }}>
-                      {`// ${t.idealPartnerTitle}`}
-                    </p>
-                    <p style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: '#C8956C', lineHeight: 1.65 }}>
-                      {portrait.idealPartnerPicture}
-                    </p>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div style={{ ...innerBox, textAlign: 'center', padding: '24px 20px' }}>
-                <p style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 15, color: '#C8956C', lineHeight: 1.5, opacity: 0.65 }}>
-                  {t.stillGettingToKnow}
-                </p>
-                <p style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: '#C8956C', marginTop: 8, lineHeight: 1.6, opacity: 0.45 }}>
-                  {t.patternsEmerge}
-                </p>
-              </div>
-            )}
-
-            {/* Privacy note */}
-            <p style={{ fontFamily: 'var(--font-body)', fontSize: 11, color: 'rgba(16,16,16,0.35)', lineHeight: 1.6, textAlign: 'center', fontStyle: 'italic' }}>
-              {t.privacyNote}
-            </p>
-
-            {/* Delete */}
-            {!showDeleteConfirm ? (
-              <button
-                onClick={() => setShowDeleteConfirm(true)}
-                style={{
-                  width: '100%',
-                  background: '#F2C8C8',
-                  border: 'none',
-                  borderRadius: 14,
-                  padding: '15px 20px',
-                  color: '#101010',
-                  fontFamily: 'var(--font-body)',
-                  fontSize: 15,
-                  fontWeight: 500,
-                  cursor: 'pointer',
-                }}
-              >
-                {t.deleteData}
-              </button>
-            ) : (
-              <div style={{ background: '#F2C8C8', borderRadius: 14, padding: '20px', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: 12 }}>
-                <p style={{ fontFamily: 'var(--font-body)', fontSize: 14, color: '#101010' }}>{t.deleteConfirm}</p>
-                <div style={{ display: 'flex', gap: 10 }}>
-                  <button
-                    onClick={handleDelete}
-                    style={{ flex: 1, background: 'rgba(180,60,60,0.18)', border: '1px solid rgba(180,60,60,0.35)', borderRadius: 10, padding: '10px', color: '#c0392b', fontFamily: 'var(--font-body)', fontSize: 13, fontWeight: 500, cursor: 'pointer' }}
-                  >
-                    {t.deleteYes}
-                  </button>
-                  <button
-                    onClick={() => setShowDeleteConfirm(false)}
-                    style={{ flex: 1, background: 'rgba(255,255,255,0.65)', border: '1px solid rgba(200,149,108,0.28)', borderRadius: 10, padding: '10px', color: '#101010', fontFamily: 'var(--font-body)', fontSize: 13, cursor: 'pointer' }}
-                  >
-                    {t.deleteCancel}
-                  </button>
-                </div>
-              </div>
-            )}
-
           </div>
+
+          {/* Patterns card (shown when portrait data exists) */}
+          {portrait && portrait.patterns.length > 0 && (
+            <div style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.09)', borderRadius: 20, padding: '20px', display: 'flex', flexDirection: 'column', gap: 10 }} className="animate-fade-in">
+              <p style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 12, color: 'rgba(255,255,255,0.40)', marginBottom: 4 }}>
+                {`// ${t.patternsNoticed}`}
+              </p>
+              {portrait.patterns.map((pattern, i) => (
+                <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
+                  <span style={{ color: '#C8A84B', fontSize: 10, marginTop: 4, flexShrink: 0 }}>✦</span>
+                  <p style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'rgba(255,255,255,0.68)', lineHeight: 1.6 }}>
+                    {pattern}
+                  </p>
+                </div>
+              ))}
+              {portrait.idealPartnerPicture && (
+                <div style={{ marginTop: 8, paddingTop: 14, borderTop: '1px dashed rgba(255,255,255,0.12)' }}>
+                  <p style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontSize: 12, color: 'rgba(255,255,255,0.35)', marginBottom: 6 }}>
+                    {`// ${t.idealPartnerTitle}`}
+                  </p>
+                  <p style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'rgba(255,255,255,0.65)', lineHeight: 1.65 }}>
+                    {portrait.idealPartnerPicture}
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Privacy note */}
+          <p style={{ fontFamily: 'var(--font-body)', fontSize: 11, color: 'rgba(255,255,255,0.20)', lineHeight: 1.6, textAlign: 'center', fontStyle: 'italic', padding: '4px 8px' }}>
+            {t.privacyNote}
+          </p>
+
         </div>
       </div>
       <NavBar />
