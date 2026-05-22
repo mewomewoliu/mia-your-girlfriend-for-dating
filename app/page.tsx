@@ -66,8 +66,8 @@ function SplitScreen({ imgSrc, imgFit = 'contain', onBack, children }: {
             ←
           </button>
         )}
-        <span style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: '#C8956C', letterSpacing: '0.01em', fontWeight: 400 }}>
-          {'{Mia: a girlfriend helps you date and love yourself }'}
+        <span style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: '#C8A84B', letterSpacing: '0.01em', fontWeight: 400 }}>
+          {lang === 'zh' ? '{Mia: 帮助你建立内在的信任 }' : '{Mia: build trust from the inside out }'}
         </span>
       </div>
 
@@ -174,8 +174,8 @@ export default function OnboardingPage() {
   const si: React.CSSProperties = {
     width: '100%',
     background: '#fff',
-    border: '1px solid rgba(0,0,0,0.12)',
-    borderRadius: 8,
+    border: '1.5px solid rgba(200,149,108,0.75)',
+    borderRadius: 10,
     padding: '12px 14px',
     fontFamily: 'var(--font-body)',
     fontSize: 14,
@@ -183,17 +183,18 @@ export default function OnboardingPage() {
     outline: 'none',
     textAlign: 'center',
     transition: 'border-color 200ms',
+    boxSizing: 'border-box',
   }
 
   const sb: React.CSSProperties = {
     width: '100%',
     background: '#101010',
     border: 'none',
-    borderRadius: 8,
+    borderRadius: 10,
     padding: '13px 14px',
     fontFamily: 'var(--font-body)',
-    fontSize: 14,
-    fontWeight: 500,
+    fontSize: 15,
+    fontWeight: 600,
     color: '#fff',
     cursor: 'pointer',
     transition: 'opacity 160ms',
@@ -201,13 +202,11 @@ export default function OnboardingPage() {
 
   const sl: React.CSSProperties = {
     fontFamily: 'var(--font-body)',
-    fontSize: 10,
-    fontWeight: 500,
-    color: 'rgba(0,0,0,0.40)',
-    letterSpacing: '0.07em',
-    textTransform: 'uppercase' as const,
+    fontSize: 14,
+    fontWeight: 400,
+    color: '#101010',
     display: 'block',
-    marginBottom: 5,
+    marginBottom: 7,
   }
 
   const sh: React.CSSProperties = {
@@ -220,10 +219,10 @@ export default function OnboardingPage() {
   }
 
   function fa(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) {
-    e.target.style.borderColor = 'rgba(0,0,0,0.35)'
+    e.target.style.borderColor = 'rgba(200,149,108,1)'
   }
   function ba(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) {
-    e.target.style.borderColor = 'rgba(0,0,0,0.12)'
+    e.target.style.borderColor = 'rgba(200,149,108,0.75)'
   }
 
   const nl = lang === 'zh' ? '下一步' : 'Next step'
@@ -233,7 +232,7 @@ export default function OnboardingPage() {
     const wInput: React.CSSProperties = {
       width: '100%',
       background: '#fff',
-      border: '1px solid rgba(0,0,0,0.12)',
+      border: '1.5px solid rgba(200,149,108,0.75)',
       borderRadius: 10,
       padding: '14px 16px',
       fontFamily: 'var(--font-body)',
@@ -244,8 +243,8 @@ export default function OnboardingPage() {
       transition: 'border-color 200ms',
       boxSizing: 'border-box',
     }
-    const faw = (e: React.FocusEvent<HTMLInputElement>) => { e.target.style.borderColor = 'rgba(0,0,0,0.30)' }
-    const baw = (e: React.FocusEvent<HTMLInputElement>) => { e.target.style.borderColor = 'rgba(0,0,0,0.12)' }
+    const faw = (e: React.FocusEvent<HTMLInputElement>) => { e.target.style.borderColor = 'rgba(200,149,108,1)' }
+    const baw = (e: React.FocusEvent<HTMLInputElement>) => { e.target.style.borderColor = 'rgba(200,149,108,0.75)' }
     const blue = '#1A1AFF'
 
     return (
@@ -264,7 +263,7 @@ export default function OnboardingPage() {
             {/* Hero card */}
             <div style={{ background: '#fff', borderRadius: 20, padding: 'clamp(24px, 4vw, 36px)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20, marginBottom: 12 }}>
               <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(20px, 3.5vw, 26px)', fontWeight: 700, fontStyle: 'italic', color: blue, textAlign: 'center', margin: 0, letterSpacing: '-0.01em', lineHeight: 1.2 }}>
-                {lang === 'zh' ? 'Mia 是你的女朋友' : 'Mia is your girlfriend'}
+                {lang === 'zh' ? 'Mia 是你的镜子' : 'Mia is your mirror'}
               </h1>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -274,8 +273,8 @@ export default function OnboardingPage() {
               />
               <p style={{ fontFamily: 'var(--font-body)', fontSize: 'clamp(14px, 1.6vw, 16px)', lineHeight: 1.7, color: blue, textAlign: 'center', margin: 0, maxWidth: 340 }}>
                 {lang === 'zh'
-                  ? '我在这里帮助你先与自己建立关系，再与你的爱人建立关系。'
-                  : "I'm here to help you to build relationships with yourself first and your loves."}
+                  ? '不是帮你读懂他的心。是帮你听见自己的声音。'
+                  : "not to decode him. to help you hear yourself."}
               </p>
             </div>
 
@@ -695,8 +694,8 @@ export default function OnboardingPage() {
     return (
       <div className="welcome-root animate-fade-in">
         <div style={{ height: 56, padding: '0 20px', flexShrink: 0, display: 'flex', alignItems: 'center' }}>
-          <span style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'rgba(255,255,255,0.82)', letterSpacing: '0.01em', fontWeight: 400 }}>
-            {'{Mia: a girlfriend helps you date and love yourself }'}
+          <span style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: '#C8A84B', letterSpacing: '0.01em', fontWeight: 400 }}>
+            {lang === 'zh' ? '{Mia: 帮助你建立内在的信任 }' : '{Mia: build trust from the inside out }'}
           </span>
         </div>
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 28, padding: '0 24px' }}>
@@ -728,8 +727,8 @@ export default function OnboardingPage() {
     return (
       <div className="welcome-root animate-fade-in" style={{ overflowY: 'auto' }}>
         <div style={{ height: 56, padding: '0 20px', flexShrink: 0, display: 'flex', alignItems: 'center' }}>
-          <span style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'rgba(255,255,255,0.82)', letterSpacing: '0.01em', fontWeight: 400 }}>
-            {'{Mia: a girlfriend helps you date and love yourself }'}
+          <span style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: '#C8A84B', letterSpacing: '0.01em', fontWeight: 400 }}>
+            {lang === 'zh' ? '{Mia: 帮助你建立内在的信任 }' : '{Mia: build trust from the inside out }'}
           </span>
         </div>
 

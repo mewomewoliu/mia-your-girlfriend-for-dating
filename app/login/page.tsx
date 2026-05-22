@@ -61,7 +61,7 @@ export default function LoginPage() {
       {/* Top bar */}
       <div style={{ height: 56, padding: '0 20px', flexShrink: 0, display: 'flex', alignItems: 'center' }}>
         <span style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'rgba(255,255,255,0.82)', letterSpacing: '0.01em', fontWeight: 400 }}>
-          {'{Mia: a girlfriend helps you date and love yourself }'}
+          {'{Mia: build trust from the inside out }'}
         </span>
       </div>
 
@@ -96,7 +96,7 @@ export default function LoginPage() {
                   width: '100%',
                   background: '#fff',
                   border: '1px solid rgba(0,0,0,0.14)',
-                  borderRadius: 8,
+                  borderRadius: 10,
                   padding: '12px 14px',
                   fontFamily: 'var(--font-body)',
                   fontSize: 14,
@@ -135,8 +135,8 @@ export default function LoginPage() {
                   style={{
                     width: '100%',
                     background: '#fff',
-                    border: '1px solid rgba(0,0,0,0.12)',
-                    borderRadius: 8,
+                    border: '1.5px solid rgba(200,149,108,0.75)',
+                    borderRadius: 10,
                     padding: '12px 14px',
                     fontFamily: 'var(--font-body)',
                     fontSize: 14,
@@ -146,8 +146,8 @@ export default function LoginPage() {
                     transition: 'border-color 200ms',
                     boxSizing: 'border-box',
                   }}
-                  onFocus={(e) => { e.target.style.borderColor = 'rgba(0,0,0,0.35)' }}
-                  onBlur={(e) => { e.target.style.borderColor = 'rgba(0,0,0,0.12)' }}
+                  onFocus={(e) => { e.target.style.borderColor = 'rgba(200,149,108,1)' }}
+                  onBlur={(e) => { e.target.style.borderColor = 'rgba(200,149,108,0.75)' }}
                 />
                 {state === 'error' && (
                   <p style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: '#c0392b', textAlign: 'center' }}>{errorMsg}</p>
@@ -159,11 +159,11 @@ export default function LoginPage() {
                     width: '100%',
                     background: '#101010',
                     border: 'none',
-                    borderRadius: 8,
+                    borderRadius: 10,
                     padding: '13px 14px',
                     fontFamily: 'var(--font-body)',
-                    fontSize: 14,
-                    fontWeight: 500,
+                    fontSize: 15,
+                    fontWeight: 600,
                     color: '#fff',
                     cursor: state === 'sending' ? 'not-allowed' : 'pointer',
                     opacity: state === 'sending' || !email.trim() ? 0.45 : 1,

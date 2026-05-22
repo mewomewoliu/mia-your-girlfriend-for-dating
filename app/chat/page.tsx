@@ -171,8 +171,8 @@ export default function ChatPage() {
 
           {/* Golden tagline */}
           <div style={{ padding: 'max(16px, env(safe-area-inset-top)) 20px 12px', flexShrink: 0 }}>
-            <span style={{ fontFamily: 'var(--font-body)', fontSize: 'clamp(11px, 3.5vw, 13px)', color: '#C8956C', letterSpacing: '0.01em', fontWeight: 400 }}>
-              {'{Mia: a girlfriend helps you date and love yourself }'}
+            <span style={{ fontFamily: 'var(--font-body)', fontSize: 'clamp(11px, 3.5vw, 13px)', color: '#C8A84B', letterSpacing: '0.01em', fontWeight: 400 }}>
+              {'{Mia: build trust from the inside out }'}
             </span>
           </div>
 

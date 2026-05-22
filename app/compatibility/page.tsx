@@ -71,22 +71,23 @@ export default function CompatibilityPage() {
 
   const fieldInput: React.CSSProperties = {
     width: '100%',
-    background: 'rgba(255,255,255,0.55)',
-    border: '1.5px solid #C8956C',
-    borderRadius: 12,
+    background: '#fff',
+    border: '1.5px solid rgba(200,149,108,0.75)',
+    borderRadius: 10,
     padding: '14px 16px',
     color: '#101010',
     fontFamily: 'var(--font-body)',
     fontSize: 15,
     outline: 'none',
     textAlign: 'center',
-    transition: 'border-color 200ms, background 200ms',
+    transition: 'border-color 200ms',
+    boxSizing: 'border-box',
   }
 
   const fieldLabel: React.CSSProperties = {
     fontFamily: 'var(--font-body)',
-    fontSize: 12,
-    color: 'rgba(16,16,16,0.60)',
+    fontSize: 14,
+    color: '#101010',
     display: 'block',
     marginBottom: 7,
     fontWeight: 400,
@@ -103,21 +104,19 @@ export default function CompatibilityPage() {
   }
 
   const onFocus = (e: React.FocusEvent<HTMLInputElement>) => {
-    e.target.style.borderColor = 'rgba(200,149,108,0.90)'
-    e.target.style.background = '#fff'
+    e.target.style.borderColor = 'rgba(200,149,108,1)'
   }
   const onBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    e.target.style.borderColor = '#C8956C'
-    e.target.style.background = 'rgba(255,255,255,0.55)'
+    e.target.style.borderColor = 'rgba(200,149,108,0.75)'
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100dvh', background: '#1a1a1a', paddingBottom: 80 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100dvh', background: '#14141a', paddingBottom: 80 }}>
 
       {/* Tagline */}
       <div style={{ padding: 'max(16px, env(safe-area-inset-top)) 20px 12px', flexShrink: 0 }}>
-        <span style={{ fontFamily: 'var(--font-body)', fontSize: 'clamp(11px, 3.5vw, 13px)', color: '#C8956C', letterSpacing: '0.01em', fontWeight: 400 }}>
-          {'{Mia: a girlfriend helps you date and love yourself }'}
+        <span style={{ fontFamily: 'var(--font-body)', fontSize: 'clamp(11px, 3.5vw, 13px)', color: '#C8A84B', letterSpacing: '0.01em', fontWeight: 400 }}>
+          {lang === 'zh' ? '{Mia: 帮助你建立内在的信任 }' : '{Mia: build trust from the inside out }'}
         </span>
       </div>
 
@@ -127,7 +126,7 @@ export default function CompatibilityPage() {
 
           {/* ── FORM ─────────────────────────────── */}
           {view === 'form' && (
-            <div style={{ background: '#F0EDEA', borderRadius: 24, overflow: 'hidden' }} className="animate-fade-in">
+            <div style={{ background: '#fff', borderRadius: 24, overflow: 'hidden' }} className="animate-fade-in">
 
               {/* Heading */}
               <div style={{ padding: '24px 24px 0' }}>
@@ -208,7 +207,7 @@ export default function CompatibilityPage() {
                     width: '100%',
                     background: canGenerate ? '#101010' : 'rgba(16,16,16,0.22)',
                     border: 'none',
-                    borderRadius: 12,
+                    borderRadius: 10,
                     padding: '15px 20px',
                     color: canGenerate ? '#fff' : 'rgba(16,16,16,0.35)',
                     fontFamily: 'var(--font-body)',
@@ -282,7 +281,7 @@ export default function CompatibilityPage() {
 
           {/* ── REPORT ───────────────────────────── */}
           {view === 'report' && report && (
-            <div style={{ background: '#F0EDEA', borderRadius: 24, overflow: 'hidden' }} className="animate-fade-in">
+            <div style={{ background: '#fff', borderRadius: 24, overflow: 'hidden' }} className="animate-fade-in">
 
               {/* Back + title */}
               <div style={{ padding: '24px 24px 20px' }}>
@@ -305,7 +304,7 @@ export default function CompatibilityPage() {
                   { title: t.sectionAttention, content: report.sections.payAttention },
                   { title: t.sectionChemistry, content: report.sections.chemistryVsLongevity },
                 ].map(({ title, content }) => (
-                  <div key={title} style={{ background: '#E8E5E1', borderRadius: 16, padding: '16px' }}>
+                  <div key={title} style={{ background: '#F0EDEA', borderRadius: 16, padding: '16px' }}>
                     <p style={goldLabel}>{title}</p>
                     <p style={{ fontFamily: 'var(--font-body)', fontSize: 14, fontWeight: 300, color: '#C8956C', lineHeight: 1.7 }}>
                       {content}
@@ -314,7 +313,7 @@ export default function CompatibilityPage() {
                 ))}
 
                 {/* Questions */}
-                <div style={{ background: '#E8E5E1', borderRadius: 16, padding: '16px' }}>
+                <div style={{ background: '#F0EDEA', borderRadius: 16, padding: '16px' }}>
                   <p style={goldLabel}>{t.questionsTitle}</p>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                     {report.sections.questionsToExplore.map((q, i) => (
