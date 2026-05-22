@@ -167,124 +167,119 @@ export default function ChatPage() {
   if (isMobile) {
     return (
       <>
-        <div className="flex flex-col h-dvh" style={{ background: '#1a1a1a' }}>
+        <div className="flex flex-col h-dvh" style={{ background: '#F0EDEA' }}>
 
-          {/* Golden tagline */}
-          <div style={{ padding: 'max(16px, env(safe-area-inset-top)) 20px 12px', flexShrink: 0 }}>
+          {/* Tagline */}
+          <div style={{ padding: 'max(16px, env(safe-area-inset-top)) 20px 4px', flexShrink: 0 }}>
             <span style={{ fontFamily: 'var(--font-body)', fontSize: 'clamp(11px, 3.5vw, 13px)', color: '#C8A84B', letterSpacing: '0.01em', fontWeight: 400 }}>
               {'{Mia: build trust from the inside out }'}
             </span>
           </div>
 
-          {/* White chat card */}
-          <div style={{
-            flex: 1,
-            margin: '0 12px',
-            background: '#fff',
-            borderRadius: 20,
-            overflow: 'hidden',
-            display: 'flex',
-            flexDirection: 'column',
-            minHeight: 0,
-            position: 'relative',
-          }}>
-            {/* Flower background */}
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/lily.png"
-              alt=""
-              aria-hidden="true"
-              style={{
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                width: '85%',
-                maxWidth: 320,
-                objectFit: 'contain',
-                opacity: 0.5,
-                pointerEvents: 'none',
-                userSelect: 'none',
-                zIndex: 0,
-              }}
-            />
-
-            {/* Card header */}
-            <div style={{ padding: '16px 16px 0', flexShrink: 0, position: 'relative', zIndex: 1 }}>
-              <p style={{ fontFamily: 'var(--font-body)', fontSize: 20, fontWeight: 700, color: '#101010', letterSpacing: '-0.01em' }}>
-                Chat
-              </p>
-            </div>
-
-            {/* Messages */}
-            <div className="flex-1 overflow-y-auto" style={{ padding: '12px 14px 0', position: 'relative', zIndex: 1 }}>
-              <div className="flex flex-col gap-3">
-                {messages.map((msg) => (
-                  <ChatBubble key={msg.id} message={msg} />
-                ))}
-                {isTyping && <TypingIndicator />}
-                <div ref={bottomRef} style={{ height: 10 }} />
-              </div>
-            </div>
-
-            {/* Quick replies inside card */}
-            {showReplies && !isTyping && (
-              <div style={{ position: 'relative', zIndex: 1 }}>
-                <QuickReply
-                  options={t.quickReplies as unknown as string[]}
-                  onSelect={(opt) => sendMessage(opt)}
-                />
-              </div>
-            )}
+          {/* "Chat" title */}
+          <div style={{ textAlign: 'center', padding: '6px 20px 0', flexShrink: 0 }}>
+            <p style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 700, fontSize: 28, color: '#1A1AFF', letterSpacing: '-0.01em', lineHeight: 1.2 }}>
+              {lang === 'zh' ? '聊天' : 'Chat'}
+            </p>
           </div>
 
-          {/* Input bar — outside card, on dark bg */}
+          {/* Messages — peony lives at the top of the scroll list */}
+          <div className="flex-1 overflow-y-auto" style={{ padding: '0 16px 0', minHeight: 0 }}>
+            <div className="flex flex-col gap-4">
+              {/* Peony header illustration */}
+              <div style={{ display: 'flex', justifyContent: 'center', padding: '12px 0 8px' }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/peony.png" alt="" style={{ width: '74%', maxWidth: 260, objectFit: 'contain', pointerEvents: 'none' }} />
+              </div>
+
+              {messages.map((msg) => (
+                <ChatBubble key={msg.id} message={msg} />
+              ))}
+              {isTyping && <TypingIndicator />}
+              <div ref={bottomRef} style={{ height: 4 }} />
+            </div>
+          </div>
+
+          {/* Quick replies */}
+          {showReplies && !isTyping && (
+            <div style={{ padding: '0 16px', flexShrink: 0 }}>
+              <QuickReply
+                options={t.quickReplies as unknown as string[]}
+                onSelect={(opt) => sendMessage(opt)}
+              />
+            </div>
+          )}
+
+          {/* Input bar */}
           <div style={{
-            padding: '10px 12px',
-            paddingBottom: 'calc(58px + max(10px, env(safe-area-inset-bottom)))',
+            padding: '10px 16px',
+            paddingBottom: 'calc(68px + max(8px, env(safe-area-inset-bottom)))',
             flexShrink: 0,
           }}>
-            <form onSubmit={handleSubmit} style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-              <input
-                ref={inputRef}
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder={lang === 'zh' ? '输入...' : 'Type in'}
-                style={{
-                  flex: 1,
-                  background: 'rgba(255,255,255,0.95)',
-                  border: '1px solid rgba(255,255,255,0.20)',
-                  borderRadius: 24,
-                  padding: '11px 18px',
-                  color: '#101010',
-                  fontFamily: 'var(--font-body)',
-                  fontSize: 14,
-                  outline: 'none',
-                  transition: 'border-color 200ms',
-                }}
-                onFocus={(e) => { e.target.style.borderColor = 'rgba(0,0,0,0.30)' }}
-                onBlur={(e) => { e.target.style.borderColor = 'rgba(255,255,255,0.20)' }}
-              />
-              <button
-                type="submit"
-                disabled={!canSend}
-                style={{
-                  height: 44,
-                  borderRadius: 14,
-                  background: canSend ? '#C8956C' : 'rgba(200,149,108,0.35)',
-                  border: 'none',
-                  padding: '0 18px',
-                  color: '#fff',
-                  fontFamily: 'var(--font-body)',
-                  fontSize: 14,
-                  fontWeight: 500,
-                  cursor: canSend ? 'pointer' : 'not-allowed',
-                  transition: 'all 150ms ease',
-                  flexShrink: 0,
-                }}
-              >
-                {lang === 'zh' ? '发送' : 'Send'}
-              </button>
+            <form onSubmit={handleSubmit}>
+              <div style={{
+                background: '#fff',
+                borderRadius: 16,
+                padding: '12px 12px 12px 16px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 10,
+                boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
+              }}>
+                <input
+                  ref={inputRef}
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(input) } }}
+                  placeholder={lang === 'zh' ? '输入...' : 'Type in'}
+                  style={{
+                    border: 'none',
+                    outline: 'none',
+                    background: 'transparent',
+                    fontFamily: 'var(--font-body)',
+                    fontSize: 15,
+                    color: '#101010',
+                    width: '100%',
+                    minHeight: 48,
+                  }}
+                />
+                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
+                  {/* Mic button */}
+                  <button
+                    type="button"
+                    style={{
+                      width: 44, height: 44, borderRadius: 12,
+                      background: '#F0EDEA', border: 'none',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      cursor: 'pointer', flexShrink: 0,
+                    }}
+                  >
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                      <rect x="9" y="2" width="6" height="11" rx="3" stroke="#101010" strokeWidth="1.8" />
+                      <path d="M5 10a7 7 0 0 0 14 0" stroke="#101010" strokeWidth="1.8" strokeLinecap="round" />
+                      <line x1="12" y1="17" x2="12" y2="21" stroke="#101010" strokeWidth="1.8" strokeLinecap="round" />
+                      <line x1="9" y1="21" x2="15" y2="21" stroke="#101010" strokeWidth="1.8" strokeLinecap="round" />
+                    </svg>
+                  </button>
+                  {/* Send button */}
+                  <button
+                    type="submit"
+                    disabled={!canSend}
+                    style={{
+                      width: 44, height: 44, borderRadius: 12,
+                      background: canSend ? '#101010' : 'rgba(16,16,16,0.18)',
+                      border: 'none',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      cursor: canSend ? 'pointer' : 'not-allowed',
+                      transition: 'background 150ms', flexShrink: 0,
+                    }}
+                  >
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                      <path d="M12 19V5M5 12l7-7 7 7" stroke={canSend ? '#fff' : 'rgba(255,255,255,0.35)'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
             </form>
           </div>
 

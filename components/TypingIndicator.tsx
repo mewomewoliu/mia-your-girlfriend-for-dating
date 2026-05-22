@@ -5,7 +5,7 @@ export function TypingIndicator() {
     <div className="flex items-start animate-bubble-in">
       <div
         style={{
-          background: '#F3EFE9',
+          background: '#EDE8DF',
           borderRadius: '18px 18px 18px 4px',
           padding: '11px 16px',
           display: 'flex',

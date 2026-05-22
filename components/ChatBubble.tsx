@@ -17,16 +17,15 @@ export function ChatBubble({ message }: ChatBubbleProps) {
     >
       <div
         style={{
-          maxWidth: '78%',
-          background: isUser ? '#101010' : '#F3EFE9',
-          border: 'none',
-          borderRadius: isUser ? '18px 18px 4px 18px' : '18px 18px 18px 4px',
-          padding: '10px 14px',
-          color: isUser ? 'rgba(255,255,255,0.90)' : 'rgba(16,16,16,0.78)',
+          maxWidth: '92%',
+          background: isUser ? '#101010' : '#EDE8DF',
+          borderRadius: 20,
+          padding: '14px 18px',
+          color: isUser ? 'rgba(255,255,255,0.90)' : '#101010',
           fontFamily: 'var(--font-body)',
-          fontSize: 14.5,
-          fontWeight: isUser ? 400 : 300,
-          lineHeight: 1.62,
+          fontSize: 15,
+          fontWeight: 400,
+          lineHeight: 1.65,
           whiteSpace: 'pre-wrap',
           wordBreak: 'break-word',
         }}
@@ -35,22 +34,26 @@ export function ChatBubble({ message }: ChatBubbleProps) {
       </div>
 
       {message.insightCard && (
-        <div style={{ maxWidth: '78%' }}>
+        <div style={{ maxWidth: '92%' }}>
           <InsightCard text={message.insightCard.text} />
         </div>
       )}
 
-      <span
-        style={{
-          fontSize: 9.5,
-          color: 'rgba(16,16,16,0.25)',
-          fontFamily: 'var(--font-body)',
-          paddingLeft: isUser ? 0 : 2,
-          paddingRight: isUser ? 2 : 0,
-        }}
-      >
-        {formatTime(message.timestamp)}
-      </span>
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: isUser ? 'flex-end' : 'flex-start',
+        gap: 2,
+        paddingLeft: isUser ? 0 : 2,
+        paddingRight: isUser ? 2 : 0,
+      }}>
+        <span style={{ fontSize: 11, color: 'rgba(16,16,16,0.35)', fontFamily: 'var(--font-body)' }}>
+          {formatTime(message.timestamp)}
+        </span>
+        <span style={{ fontSize: 12, color: '#101010', fontFamily: 'var(--font-body)', fontWeight: 600 }}>
+          {isUser ? '{You}' : '{Mia}'}
+        </span>
+      </div>
     </div>
   )
 }
