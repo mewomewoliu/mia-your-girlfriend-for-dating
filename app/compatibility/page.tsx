@@ -71,8 +71,8 @@ export default function CompatibilityPage() {
 
   const fieldInput: React.CSSProperties = {
     width: '100%',
-    background: '#fff',
-    border: '1.5px solid rgba(200,149,108,0.75)',
+    background: 'rgba(255,255,255,0.80)',
+    border: '1.5px solid rgba(200,149,108,0.55)',
     borderRadius: 10,
     padding: '14px 16px',
     color: '#101010',
@@ -80,7 +80,7 @@ export default function CompatibilityPage() {
     fontSize: 15,
     outline: 'none',
     textAlign: 'center',
-    transition: 'border-color 200ms',
+    transition: 'border-color 200ms, background 200ms',
     boxSizing: 'border-box',
   }
 
@@ -105,9 +105,11 @@ export default function CompatibilityPage() {
 
   const onFocus = (e: React.FocusEvent<HTMLInputElement>) => {
     e.target.style.borderColor = 'rgba(200,149,108,1)'
+    e.target.style.background = '#fff'
   }
   const onBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    e.target.style.borderColor = 'rgba(200,149,108,0.75)'
+    e.target.style.borderColor = 'rgba(200,149,108,0.55)'
+    e.target.style.background = 'rgba(255,255,255,0.80)'
   }
 
   return (
@@ -126,25 +128,23 @@ export default function CompatibilityPage() {
 
           {/* ── FORM ─────────────────────────────── */}
           {view === 'form' && (
-            <div style={{ background: '#fff', borderRadius: 24, overflow: 'hidden' }} className="animate-fade-in">
+            <div style={{ background: '#F0EDEA', borderRadius: 24, overflow: 'hidden' }} className="animate-fade-in">
 
-              {/* Heading */}
-              <div style={{ padding: '24px 24px 0' }}>
-                <p style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(18px, 5.5vw, 22px)', fontWeight: 700, color: '#101010', lineHeight: 1.3, letterSpacing: '-0.01em' }}>
-                  {t.compatFormTitle.split('\n').map((line, i, arr) => (
-                    <span key={i}>{line}{i < arr.length - 1 && <br />}</span>
-                  ))}
+              {/* Title */}
+              <div style={{ padding: '28px 24px 0', textAlign: 'center' }}>
+                <p style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 6vw, 28px)', fontWeight: 700, fontStyle: 'italic', color: '#1A1AFF', letterSpacing: '-0.01em', lineHeight: 1.2 }}>
+                  {lang === 'zh' ? '你的约会对象' : 'Your date'}
                 </p>
               </div>
 
-              {/* Flower */}
-              <div style={{ display: 'flex', justifyContent: 'center', padding: '20px 24px 16px' }}>
+              {/* Peony illustration */}
+              <div style={{ display: 'flex', justifyContent: 'center', padding: '20px 16px 8px' }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/lily.png" alt="" style={{ width: '66%', maxWidth: 240, objectFit: 'contain', opacity: 0.85 }} />
+                <img src="/peony.png" alt="" style={{ width: '78%', maxWidth: 280, objectFit: 'contain' }} />
               </div>
 
               {/* Fields */}
-              <div style={{ padding: '0 24px 24px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+              <div style={{ padding: '16px 20px 0', display: 'flex', flexDirection: 'column', gap: 14 }}>
                 <div>
                   <label style={fieldLabel}>{t.theirName}</label>
                   <input
@@ -160,7 +160,7 @@ export default function CompatibilityPage() {
                   <input
                     type={isMobile ? 'text' : 'date'}
                     style={fieldInput}
-                    placeholder={isMobile ? (lang === 'zh' ? '推荐 1995-01-15' : 'e.g. 1995-01-15') : undefined}
+                    placeholder={lang === 'zh' ? 'YYYY-MM-DD' : 'YYYY-MM-DD'}
                     value={partnerBirthDate}
                     onChange={(e) => setPartnerBirthDate(e.target.value)}
                     onFocus={onFocus} onBlur={onBlur}
@@ -169,22 +169,19 @@ export default function CompatibilityPage() {
                 <div>
                   <label style={fieldLabel}>
                     {t.birthTime}{' '}
-                    <span style={{ opacity: 0.55, fontStyle: 'italic' }}>{t.birthTimeOptionalLabel}</span>
+                    <span style={{ opacity: 0.45, fontSize: 13 }}>{t.birthTimeOptionalLabel}</span>
                   </label>
                   <input
                     type={isMobile ? 'text' : 'time'}
                     style={fieldInput}
-                    placeholder={isMobile ? (lang === 'zh' ? '例如 14:30（可选）' : 'e.g. 14:30 (optional)') : undefined}
+                    placeholder={lang === 'zh' ? 'HH-MM' : 'HH-MM'}
                     value={partnerBirthTime}
                     onChange={(e) => setPartnerBirthTime(e.target.value)}
                     onFocus={onFocus} onBlur={onBlur}
                   />
                 </div>
                 <div>
-                  <label style={fieldLabel}>
-                    {t.birthCityOptionalLabel}{' '}
-                    <span style={{ opacity: 0.55, fontStyle: 'italic' }}>{t.birthTimeOptionalLabel}</span>
-                  </label>
+                  <label style={fieldLabel}>{t.birthCityOptionalLabel}</label>
                   <input
                     style={fieldInput}
                     placeholder={lang === 'zh' ? '例如 北京，中国' : 'e.g. Stockholm, Sweden'}
@@ -199,7 +196,10 @@ export default function CompatibilityPage() {
                     {error}
                   </p>
                 )}
+              </div>
 
+              {/* Button */}
+              <div style={{ padding: '24px 20px 28px' }}>
                 <button
                   onClick={generate}
                   disabled={!canGenerate}
@@ -208,14 +208,13 @@ export default function CompatibilityPage() {
                     background: canGenerate ? '#101010' : 'rgba(16,16,16,0.22)',
                     border: 'none',
                     borderRadius: 10,
-                    padding: '15px 20px',
+                    padding: '16px 20px',
                     color: canGenerate ? '#fff' : 'rgba(16,16,16,0.35)',
                     fontFamily: 'var(--font-body)',
                     fontSize: 15,
                     fontWeight: 600,
                     cursor: canGenerate ? 'pointer' : 'not-allowed',
-                    transition: 'background 150ms',
-                    marginTop: 4,
+                    transition: 'opacity 150ms',
                   }}
                 >
                   {lang === 'zh' ? '读取TA的星盘' : 'Read their chart'}
@@ -224,7 +223,7 @@ export default function CompatibilityPage() {
 
               {/* Past readings */}
               {history.length > 0 && (
-                <div style={{ borderTop: '1px solid rgba(200,149,108,0.20)', padding: '20px 24px' }}>
+                <div style={{ borderTop: '1px solid rgba(0,0,0,0.08)', padding: '20px 20px 24px' }}>
                   <p style={{ fontFamily: 'var(--font-body)', fontSize: 10, color: 'rgba(16,16,16,0.40)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 12 }}>
                     {t.pastReadings}
                   </p>
@@ -234,9 +233,9 @@ export default function CompatibilityPage() {
                         key={i}
                         onClick={() => { setReport(r); setView('report') }}
                         style={{
-                          background: 'rgba(255,255,255,0.55)',
-                          border: '1px solid rgba(200,149,108,0.28)',
-                          borderRadius: 12,
+                          background: 'rgba(255,255,255,0.60)',
+                          border: '1px solid rgba(0,0,0,0.08)',
+                          borderRadius: 10,
                           padding: '12px 16px',
                           textAlign: 'left',
                           cursor: 'pointer',
